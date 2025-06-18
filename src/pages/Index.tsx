@@ -1,39 +1,13 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Smartphone, Laptop, Wrench, ShoppingCart, DollarSign, Shield, Clock, Star } from "lucide-react";
 import { Link } from "react-router-dom";
+import Navigation from "@/components/Navigation";
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800">
-      {/* Header */}
-      <header className="bg-black/90 backdrop-blur-sm shadow-lg border-b border-lemon/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-3">
-              <div className="p-2 bg-lemon rounded-lg">
-                <Smartphone className="h-6 w-6 text-black" />
-              </div>
-              <span className="text-2xl font-bold text-white font-poppins">TechMarket</span>
-            </div>
-            <nav className="hidden md:flex space-x-8">
-              <Link to="/buy" className="text-gray-300 hover:text-lemon transition-colors duration-300 font-medium">Buy</Link>
-              <Link to="/sell" className="text-gray-300 hover:text-lemon transition-colors duration-300 font-medium">Sell</Link>
-              <Link to="/repairs" className="text-gray-300 hover:text-lemon transition-colors duration-300 font-medium">Repairs</Link>
-            </nav>
-            
-            {/* Mobile menu button */}
-            <div className="md:hidden">
-              <button className="text-gray-300 hover:text-lemon transition-colors">
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Navigation />
 
       {/* Hero Section */}
       <section className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8">
