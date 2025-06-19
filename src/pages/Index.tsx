@@ -143,7 +143,7 @@ const Index = () => {
                 <div className="p-2 bg-lemon rounded-lg">
                   <Smartphone className="h-5 w-5 text-black" />
                 </div>
-                <span className="text-xl font-bold font-poppins">TechMarket</span>
+                <span className="text-xl font-bold font-poppins">QuickBuy</span>
               </div>
               <p className="text-gray-400 font-inter">Your trusted partner for all things tech.</p>
             </div>
@@ -173,7 +173,7 @@ const Index = () => {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400 font-inter">
-            <p>&copy; 2024 TechMarket. All rights reserved.</p>
+            <p>&copy; 2024 QuickBuy. All rights reserved.</p>
           </div>
         </div>
       </footer>

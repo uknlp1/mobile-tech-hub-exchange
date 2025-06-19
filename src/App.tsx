@@ -12,6 +12,7 @@ import Track from "./pages/Track";
 import Account from "./pages/Account";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import AgentLogin from "./pages/AgentLogin";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/account" element={<Account />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/agent-login" element={<AgentLogin />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

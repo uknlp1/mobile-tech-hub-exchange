@@ -36,7 +36,7 @@ const Navigation = () => {
             <div className="p-2 bg-lemon rounded-lg">
               <Smartphone className="h-6 w-6 text-black" />
             </div>
-            <span className="text-2xl font-bold text-white font-poppins">TechMarket</span>
+            <span className="text-2xl font-bold text-white font-poppins">QuickBuy</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -62,6 +62,11 @@ const Navigation = () => {
 
           {/* Auth Buttons */}
           <div className="hidden md:flex items-center space-x-4">
+            <Link to="/agent-login">
+              <Button variant="ghost" className="text-gray-300 hover:text-lemon hover:bg-lemon/10">
+                Agent Login
+              </Button>
+            </Link>
             <Link to="/login">
               <Button variant="outline" className="border-lemon text-lemon hover:bg-lemon hover:text-black">
                 Login
@@ -106,6 +111,11 @@ const Navigation = () => {
                 );
               })}
               <div className="flex flex-col space-y-2 pt-4 border-t border-gray-700">
+                <Link to="/agent-login" onClick={() => setIsMenuOpen(false)}>
+                  <Button variant="ghost" className="w-full text-gray-300 hover:text-lemon hover:bg-lemon/10">
+                    Agent Login
+                  </Button>
+                </Link>
                 <Link to="/login" onClick={() => setIsMenuOpen(false)}>
                   <Button variant="outline" className="w-full border-lemon text-lemon hover:bg-lemon hover:text-black">
                     Login
