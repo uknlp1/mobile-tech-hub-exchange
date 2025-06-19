@@ -1,14 +1,17 @@
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Smartphone, Eye, EyeOff, Shield, User } from "lucide-react";
+import { toast } from "sonner";
+import { authenticateAgent, authenticateAdmin } from "@/utils/storage";
 
 const AgentLogin = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [agentId, setAgentId] = useState("");
   const [password, setPassword] = useState("");
@@ -18,14 +21,28 @@ const AgentLogin = () => {
   const handleAgentSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Agent login attempted with:", { agentId, password });
-    // Redirect to agent dashboard (to be implemented)
+    
+    const agent = authenticateAgent(agentId, password);
+    if (agent) {
+      toast.success(`Welcome back, ${agent.name}!`);
+      localStorage.setItem('currentAgent', JSON.stringify(agent));
+      navigate("/agent-dashboard");
+    } else {
+      toast.error("Invalid agent credentials. Please check your username and password.");
+    }
   };
 
   const handleAdminSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Admin login attempted with:", { adminEmail, adminPassword });
-    // Redirect to admin portal
-    window.location.href = "/admin";
+    
+    if (authenticateAdmin(adminEmail, adminPassword)) {
+      toast.success("Welcome to the Admin Portal!");
+      localStorage.setItem('isAdmin', 'true');
+      navigate("/admin");
+    } else {
+      toast.error("Invalid admin credentials. Please check your email and password.");
+    }
   };
 
   return (
@@ -67,11 +84,11 @@ const AgentLogin = () => {
               <TabsContent value="agent">
                 <form onSubmit={handleAgentSubmit} className="space-y-4">
                   <div>
-                    <Label htmlFor="agentId" className="text-gray-300">Agent ID</Label>
+                    <Label htmlFor="agentId" className="text-gray-300">Username</Label>
                     <Input
                       id="agentId"
                       type="text"
-                      placeholder="Enter your agent ID"
+                      placeholder="Enter your username"
                       value={agentId}
                       onChange={(e) => setAgentId(e.target.value)}
                       className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400"
@@ -104,6 +121,12 @@ const AgentLogin = () => {
                   <Button type="submit" className="w-full bg-lemon hover:bg-lemon-dark text-black font-semibold">
                     Sign In as Agent
                   </Button>
+                  
+                  <div className="text-center text-sm text-gray-400">
+                    <p>Demo Credentials:</p>
+                    <p>Username: sarah.mitchell | Password: password123</p>
+                    <p>Username: michael.johnson | Password: password123</p>
+                  </div>
                 </form>
               </TabsContent>
 
@@ -147,6 +170,11 @@ const AgentLogin = () => {
                   <Button type="submit" className="w-full bg-lemon hover:bg-lemon-dark text-black font-semibold">
                     Sign In as Admin
                   </Button>
+                  
+                  <div className="text-center text-sm text-gray-400">
+                    <p>Demo Credentials:</p>
+                    <p>Email: admin@quickbuy.co.za | Password: admin123</p>
+                  </div>
                 </form>
               </TabsContent>
             </Tabs>
@@ -154,7 +182,7 @@ const AgentLogin = () => {
             <div className="mt-6 text-center">
               <p className="text-gray-300 text-sm">
                 Not an agent or admin?{" "}
-                <Link to="/login" className="text-lemon hover:text-lemon-dark font-medium">
+                <Link to="/auth" className="text-lemon hover:text-lemon-dark font-medium">
                   Customer Login
                 </Link>
               </p>

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,12 +9,28 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Package, DollarSign, CheckCircle, Clock, User, FileText } from "lucide-react";
 import Navigation from "@/components/Navigation";
 
+interface Transaction {
+  id: string;
+  transactionNumber: string;
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  deviceInfo: string;
+  status: string;
+  estimatedValue: number;
+  submittedDate: string;
+  deviceCondition: string;
+  deviceImages: string[];
+  offeredAmount?: number;
+  assessmentNotes?: string;
+}
+
 const AgentDashboard = () => {
   const [offerAmount, setOfferAmount] = useState("");
   const [assessmentNotes, setAssessmentNotes] = useState("");
 
   // Mock data for agent's assigned transactions
-  const [assignedTransactions, setAssignedTransactions] = useState([
+  const [assignedTransactions, setAssignedTransactions] = useState<Transaction[]>([
     {
       id: "TXN001",
       transactionNumber: "TXN1705123456789",
@@ -44,6 +59,7 @@ const AgentDashboard = () => {
       submittedDate: "2024-01-13",
       deviceCondition: "Fair",
       offeredAmount: 7500,
+      assessmentNotes: "Device is in fair condition with minor scratches",
       deviceImages: [
         "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=300&fit=crop"
       ]

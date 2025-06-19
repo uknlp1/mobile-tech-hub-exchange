@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,17 +10,38 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Users, Package, Settings, UserPlus, Plus, Edit, Trash2, Search, Shield, Upload, Image, DollarSign } from "lucide-react";
 import Navigation from "@/components/Navigation";
+import { toast } from "sonner";
+import { 
+  loadAgents, 
+  saveAgents, 
+  loadCustomers, 
+  saveCustomers, 
+  loadDevices, 
+  saveDevices, 
+  loadTransactions, 
+  saveTransactions,
+  Agent,
+  Customer,
+  Device,
+  Transaction
+} from "@/utils/storage";
 
 const Admin = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedAgent, setSelectedAgent] = useState<any>(null);
   const [isCreateAgentOpen, setIsCreateAgentOpen] = useState(false);
   const [isAddDeviceOpen, setIsAddDeviceOpen] = useState(false);
-  const [isAssignAgentOpen, setIsAssignAgentOpen] = useState(false);
-  const [isOfferPriceOpen, setIsOfferPriceOpen] = useState(false);
-  const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
+  const [isEditAgentOpen, setIsEditAgentOpen] = useState(false);
+  const [isEditCustomerOpen, setIsEditCustomerOpen] = useState(false);
+  const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
 
-  // Agent creation form states
+  // Load data from storage
+  const [agents, setAgents] = useState<Agent[]>([]);
+  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [devicesForSale, setDevicesForSale] = useState<Device[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+
+  // Form states
   const [newAgent, setNewAgent] = useState({
     name: "",
     email: "",
@@ -30,7 +51,6 @@ const Admin = () => {
     password: ""
   });
 
-  // Device creation form states
   const [newDevice, setNewDevice] = useState({
     type: "",
     brand: "",
@@ -42,102 +62,17 @@ const Admin = () => {
     images: [] as string[]
   });
 
-  // Mock data for agents with credentials
-  const [agents, setAgents] = useState([
-    {
-      id: "AGT001",
-      name: "Sarah Mitchell",
-      email: "sarah.m@quickbuy.co.za",
-      phone: "+27 82 123 4567",
-      role: "Senior Agent",
-      status: "Active",
-      username: "sarah.mitchell",
-      assignedDevices: 12,
-      completedAssessments: 45,
-      joinDate: "2023-06-15"
-    },
-    {
-      id: "AGT002",
-      name: "Michael Johnson",
-      email: "michael.j@quickbuy.co.za",
-      phone: "+27 83 987 6543",
-      role: "Agent",
-      status: "Active",
-      username: "michael.johnson",
-      assignedDevices: 8,
-      completedAssessments: 32,
-      joinDate: "2023-08-22"
-    }
-  ]);
-
-  // Mock data for devices with images
-  const [devicesForSale, setDevicesForSale] = useState([
-    {
-      id: "DEV001",
-      name: "iPhone 14 Pro",
-      brand: "Apple",
-      type: "phone",
-      condition: "Excellent",
-      storage: "256GB",
-      price: 15999,
-      originalPrice: 18999,
-      inStock: true,
-      addedDate: "2024-01-15",
-      images: [
-        "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400&h=300&fit=crop",
-        "https://images.unsplash.com/photo-1567784177951-6fa58317e16b?w=400&h=300&fit=crop",
-        "https://images.unsplash.com/photo-1574944985070-8f3ebc6b79d2?w=400&h=300&fit=crop"
-      ]
-    }
-  ]);
-
-  // Updated transactions with new status and agent assignment
-  const [transactions, setTransactions] = useState([
-    {
-      id: "TXN001",
-      transactionNumber: "TXN1705123456789",
-      customerName: "John Doe",
-      customerEmail: "john.doe@example.com",
-      deviceInfo: "iPhone 13 Pro - 256GB",
-      status: "Awaiting Offer",
-      amount: 12500,
-      offeredAmount: null,
-      submittedDate: "2024-01-12",
-      agentId: "AGT001",
-      agentName: "Sarah Mitchell"
-    },
-    {
-      id: "TXN002", 
-      transactionNumber: "TXN1704987654321",
-      customerName: "Jane Smith",
-      customerEmail: "jane.smith@example.com",
-      deviceInfo: "MacBook Pro 13\" - 512GB",
-      status: "Device Assessed",
-      amount: 18500,
-      offeredAmount: null,
-      submittedDate: "2024-01-10",
-      agentId: "AGT002",
-      agentName: "Michael Johnson"
-    }
-  ]);
-
-  const [customers] = useState([
-    {
-      id: "CUST001",
-      name: "John Doe",
-      email: "john.doe@example.com",
-      phone: "+27 82 111 2222",
-      status: "Active",
-      totalPurchases: 2,
-      totalSales: 1,
-      joinDate: "2023-12-01",
-      lastActivity: "2024-01-15"
-    }
-  ]);
+  // Load data on component mount
+  useEffect(() => {
+    setAgents(loadAgents());
+    setCustomers(loadCustomers());
+    setDevicesForSale(loadDevices());
+    setTransactions(loadTransactions());
+  }, []);
 
   const handleCreateAgent = () => {
     const agentId = `AGT${String(agents.length + 1).padStart(3, '0')}`;
-    const newAgentData = {
+    const newAgentData: Agent = {
       ...newAgent,
       id: agentId,
       status: "Active",
@@ -145,9 +80,68 @@ const Admin = () => {
       completedAssessments: 0,
       joinDate: new Date().toISOString().split('T')[0]
     };
-    setAgents([...agents, newAgentData]);
+    
+    const updatedAgents = [...agents, newAgentData];
+    setAgents(updatedAgents);
+    saveAgents(updatedAgents);
+    
     setNewAgent({ name: "", email: "", phone: "", role: "", username: "", password: "" });
     setIsCreateAgentOpen(false);
+    toast.success("Agent created successfully!");
+  };
+
+  const handleEditAgent = (agent: Agent) => {
+    setSelectedAgent(agent);
+    setNewAgent({
+      name: agent.name,
+      email: agent.email,
+      phone: agent.phone,
+      role: agent.role,
+      username: agent.username,
+      password: agent.password
+    });
+    setIsEditAgentOpen(true);
+  };
+
+  const handleUpdateAgent = () => {
+    if (!selectedAgent) return;
+    
+    const updatedAgents = agents.map(agent => 
+      agent.id === selectedAgent.id 
+        ? { ...selectedAgent, ...newAgent }
+        : agent
+    );
+    
+    setAgents(updatedAgents);
+    saveAgents(updatedAgents);
+    setIsEditAgentOpen(false);
+    setSelectedAgent(null);
+    setNewAgent({ name: "", email: "", phone: "", role: "", username: "", password: "" });
+    toast.success("Agent updated successfully!");
+  };
+
+  const handleDeleteAgent = (agentId: string) => {
+    const updatedAgents = agents.filter(agent => agent.id !== agentId);
+    setAgents(updatedAgents);
+    saveAgents(updatedAgents);
+    toast.success("Agent deleted successfully!");
+  };
+
+  const handleEditCustomer = (customer: Customer) => {
+    setSelectedCustomer(customer);
+    setIsEditCustomerOpen(true);
+  };
+
+  const handleUpdateCustomer = (updatedCustomer: Customer) => {
+    const updatedCustomers = customers.map(customer => 
+      customer.id === updatedCustomer.id ? updatedCustomer : customer
+    );
+    
+    setCustomers(updatedCustomers);
+    saveCustomers(updatedCustomers);
+    setIsEditCustomerOpen(false);
+    setSelectedCustomer(null);
+    toast.success("Customer updated successfully!");
   };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -163,7 +157,7 @@ const Admin = () => {
 
   const handleAddDevice = () => {
     const deviceId = `DEV${String(devicesForSale.length + 1).padStart(3, '0')}`;
-    const deviceData = {
+    const deviceData: Device = {
       ...newDevice,
       id: deviceId,
       name: `${newDevice.brand} ${newDevice.model}`,
@@ -172,32 +166,49 @@ const Admin = () => {
       inStock: true,
       addedDate: new Date().toISOString().split('T')[0]
     };
-    setDevicesForSale([...devicesForSale, deviceData]);
+    
+    const updatedDevices = [...devicesForSale, deviceData];
+    setDevicesForSale(updatedDevices);
+    saveDevices(updatedDevices);
+    
     setNewDevice({ type: "", brand: "", model: "", condition: "", storage: "", price: "", originalPrice: "", images: [] });
     setIsAddDeviceOpen(false);
+    toast.success("Device added successfully!");
   };
 
   const handleAssignAgent = (transactionId: string, agentId: string) => {
     const agent = agents.find(a => a.id === agentId);
-    setTransactions(transactions.map(txn => 
+    const updatedTransactions = transactions.map(txn => 
       txn.id === transactionId 
         ? { ...txn, agentId, agentName: agent?.name || "", status: "Assigned to Agent" }
         : txn
-    ));
+    );
+    
+    setTransactions(updatedTransactions);
+    saveTransactions(updatedTransactions);
+    toast.success("Agent assigned successfully!");
   };
 
   const handleOfferPrice = (transactionId: string, offerAmount: number) => {
-    setTransactions(transactions.map(txn => 
+    const updatedTransactions = transactions.map(txn => 
       txn.id === transactionId 
         ? { ...txn, offeredAmount: offerAmount, status: "Offer Made" }
         : txn
-    ));
+    );
+    
+    setTransactions(updatedTransactions);
+    saveTransactions(updatedTransactions);
+    toast.success("Offer made successfully!");
   };
 
   const updateTransactionStatus = (transactionId: string, newStatus: string) => {
-    setTransactions(transactions.map(txn => 
+    const updatedTransactions = transactions.map(txn => 
       txn.id === transactionId ? { ...txn, status: newStatus } : txn
-    ));
+    );
+    
+    setTransactions(updatedTransactions);
+    saveTransactions(updatedTransactions);
+    toast.success("Status updated successfully!");
   };
 
   const getStatusColor = (status: string) => {
@@ -321,9 +332,9 @@ const Admin = () => {
                               <SelectValue placeholder="Select role" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="agent">Agent</SelectItem>
-                              <SelectItem value="senior-agent">Senior Agent</SelectItem>
-                              <SelectItem value="supervisor">Supervisor</SelectItem>
+                              <SelectItem value="Agent">Agent</SelectItem>
+                              <SelectItem value="Senior Agent">Senior Agent</SelectItem>
+                              <SelectItem value="Supervisor">Supervisor</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
@@ -392,11 +403,21 @@ const Admin = () => {
                         </div>
                       </div>
                       <div className="flex gap-2 pt-2">
-                        <Button size="sm" variant="outline" className="flex-1 border-gray-600 text-gray-300">
+                        <Button 
+                          size="sm"
+                          variant="outline"
+                          className="flex-1 border-gray-600 text-gray-300"
+                          onClick={() => handleEditAgent(agent)}
+                        >
                           <Edit className="h-3 w-3 mr-1" />
                           Edit
                         </Button>
-                        <Button size="sm" variant="outline" className="border-red-600 text-red-400 hover:bg-red-600">
+                        <Button 
+                          size="sm"
+                          variant="outline"
+                          className="border-red-600 text-red-400 hover:bg-red-600"
+                          onClick={() => handleDeleteAgent(agent.id)}
+                        >
                           <Trash2 className="h-3 w-3" />
                         </Button>
                       </div>
@@ -474,9 +495,9 @@ const Admin = () => {
                               <SelectValue placeholder="Condition" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="excellent">Excellent</SelectItem>
-                              <SelectItem value="good">Good</SelectItem>
-                              <SelectItem value="fair">Fair</SelectItem>
+                              <SelectItem value="Excellent">Excellent</SelectItem>
+                              <SelectItem value="Good">Good</SelectItem>
+                              <SelectItem value="Fair">Fair</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
@@ -624,7 +645,12 @@ const Admin = () => {
                         </div>
                       </div>
                       <div className="flex gap-2 pt-2">
-                        <Button size="sm" variant="outline" className="flex-1 border-gray-600 text-gray-300">
+                        <Button 
+                          size="sm"
+                          variant="outline"
+                          className="flex-1 border-gray-600 text-gray-300"
+                          onClick={() => handleEditCustomer(customer)}
+                        >
                           <Edit className="h-3 w-3 mr-1" />
                           Edit
                         </Button>
@@ -773,6 +799,152 @@ const Admin = () => {
               </div>
             </TabsContent>
           </Tabs>
+
+          {/* Edit Agent Dialog */}
+          <Dialog open={isEditAgentOpen} onOpenChange={setIsEditAgentOpen}>
+            <DialogContent className="bg-gray-800 border-gray-700 text-white">
+              <DialogHeader>
+                <DialogTitle>Edit Agent</DialogTitle>
+                <DialogDescription className="text-gray-300">
+                  Update agent information and credentials
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="edit-agent-name" className="text-gray-300">Full Name</Label>
+                    <Input 
+                      id="edit-agent-name" 
+                      value={newAgent.name}
+                      onChange={(e) => setNewAgent({...newAgent, name: e.target.value})}
+                      className="bg-gray-700 border-gray-600 text-white" 
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="edit-agent-email" className="text-gray-300">Email</Label>
+                    <Input 
+                      id="edit-agent-email" 
+                      type="email" 
+                      value={newAgent.email}
+                      onChange={(e) => setNewAgent({...newAgent, email: e.target.value})}
+                      className="bg-gray-700 border-gray-600 text-white" 
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="edit-agent-phone" className="text-gray-300">Phone</Label>
+                    <Input 
+                      id="edit-agent-phone" 
+                      value={newAgent.phone}
+                      onChange={(e) => setNewAgent({...newAgent, phone: e.target.value})}
+                      className="bg-gray-700 border-gray-600 text-white" 
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-gray-300">Role</Label>
+                    <Select value={newAgent.role} onValueChange={(value) => setNewAgent({...newAgent, role: value})}>
+                      <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Agent">Agent</SelectItem>
+                        <SelectItem value="Senior Agent">Senior Agent</SelectItem>
+                        <SelectItem value="Supervisor">Supervisor</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="edit-agent-username" className="text-gray-300">Username</Label>
+                    <Input 
+                      id="edit-agent-username" 
+                      value={newAgent.username}
+                      onChange={(e) => setNewAgent({...newAgent, username: e.target.value})}
+                      className="bg-gray-700 border-gray-600 text-white" 
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="edit-agent-password" className="text-gray-300">Password</Label>
+                    <Input 
+                      id="edit-agent-password" 
+                      type="password"
+                      value={newAgent.password}
+                      onChange={(e) => setNewAgent({...newAgent, password: e.target.value})}
+                      className="bg-gray-700 border-gray-600 text-white" 
+                    />
+                  </div>
+                </div>
+                <Button 
+                  onClick={handleUpdateAgent}
+                  className="w-full bg-lemon hover:bg-lemon-dark text-black"
+                >
+                  Update Agent
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+
+          {/* Edit Customer Dialog */}
+          <Dialog open={isEditCustomerOpen} onOpenChange={setIsEditCustomerOpen}>
+            <DialogContent className="bg-gray-800 border-gray-700 text-white">
+              <DialogHeader>
+                <DialogTitle>Edit Customer</DialogTitle>
+                <DialogDescription className="text-gray-300">
+                  Update customer information
+                </DialogDescription>
+              </DialogHeader>
+              {selectedCustomer && (
+                <div className="space-y-4">
+                  <div>
+                    <Label className="text-gray-300">Name</Label>
+                    <Input 
+                      value={selectedCustomer.name}
+                      onChange={(e) => setSelectedCustomer({...selectedCustomer, name: e.target.value})}
+                      className="bg-gray-700 border-gray-600 text-white" 
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-gray-300">Email</Label>
+                    <Input 
+                      type="email"
+                      value={selectedCustomer.email}
+                      onChange={(e) => setSelectedCustomer({...selectedCustomer, email: e.target.value})}
+                      className="bg-gray-700 border-gray-600 text-white" 
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-gray-300">Phone</Label>
+                    <Input 
+                      value={selectedCustomer.phone}
+                      onChange={(e) => setSelectedCustomer({...selectedCustomer, phone: e.target.value})}
+                      className="bg-gray-700 border-gray-600 text-white" 
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-gray-300">Status</Label>
+                    <Select value={selectedCustomer.status} onValueChange={(value) => setSelectedCustomer({...selectedCustomer, status: value})}>
+                      <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Active">Active</SelectItem>
+                        <SelectItem value="Inactive">Inactive</SelectItem>
+                        <SelectItem value="Suspended">Suspended</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <Button 
+                    onClick={() => handleUpdateCustomer(selectedCustomer)}
+                    className="w-full bg-lemon hover:bg-lemon-dark text-black"
+                  >
+                    Update Customer
+                  </Button>
+                </div>
+              )}
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
     </div>

@@ -10,8 +10,7 @@ import Buy from "./pages/Buy";
 import Repairs from "./pages/Repairs";
 import Track from "./pages/Track";
 import Account from "./pages/Account";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
+import Auth from "./pages/Auth";
 import AgentLogin from "./pages/AgentLogin";
 import AgentDashboard from "./pages/AgentDashboard";
 import Contact from "./pages/Contact";
@@ -33,8 +32,9 @@ const App = () => (
           <Route path="/repairs" element={<Repairs />} />
           <Route path="/track" element={<Track />} />
           <Route path="/account" element={<Account />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/login" element={<Auth />} />
+          <Route path="/signup" element={<Auth />} />
           <Route path="/agent-login" element={<AgentLogin />} />
           <Route path="/agent-dashboard" element={<AgentDashboard />} />
           <Route path="/contact" element={<Contact />} />
