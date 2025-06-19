@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Search, Package, CheckCircle, Clock, User, CreditCard, MapPin } from "lucide-react";
+import { Search, Package, CheckCircle, Clock, User, CreditCard, MapPin, DollarSign } from "lucide-react";
 import Navigation from "@/components/Navigation";
 
 const Track = () => {
@@ -33,11 +33,12 @@ const Track = () => {
           brand: "Apple",
           model: "iPhone 14 Pro",
           condition: "Good",
-          status: "Device Assessed",
+          status: "Awaiting Offer",
           submittedDate: "2024-01-10T10:00:00Z",
           contactPhone: "+27 82 123 4567",
           contactEmail: "customer@example.com",
           estimatedValue: 12500,
+          offeredAmount: 11000,
           statusHistory: [
             {
               status: "Awaiting Confirmation",
@@ -58,6 +59,11 @@ const Track = () => {
               status: "Device Assessed",
               date: "2024-01-12T16:45:00Z",
               description: "Physical assessment completed. Final quote generated."
+            },
+            {
+              status: "Awaiting Offer",
+              date: "2024-01-13T11:30:00Z",
+              description: "Agent is preparing the offer based on assessment"
             }
           ]
         });
@@ -76,8 +82,12 @@ const Track = () => {
         return <User className="h-5 w-5 text-blue-500" />;
       case "device assessed":
         return <Package className="h-5 w-5 text-purple-500" />;
+      case "awaiting offer":
+        return <DollarSign className="h-5 w-5 text-orange-500" />;
+      case "offer made":
+        return <DollarSign className="h-5 w-5 text-cyan-500" />;
       case "awaiting payment":
-        return <CreditCard className="h-5 w-5 text-orange-500" />;
+        return <CreditCard className="h-5 w-5 text-orange-600" />;
       case "paid":
         return <CheckCircle className="h-5 w-5 text-green-600" />;
       default:
@@ -95,8 +105,12 @@ const Track = () => {
         return "bg-blue-500";
       case "device assessed":
         return "bg-purple-500";
-      case "awaiting payment":
+      case "awaiting offer":
         return "bg-orange-500";
+      case "offer made":
+        return "bg-cyan-500";
+      case "awaiting payment":
+        return "bg-orange-600";
       case "paid":
         return "bg-green-600";
       default:
@@ -194,6 +208,11 @@ const Track = () => {
                       <div>
                         <h4 className="text-gray-400 text-sm font-medium">Estimated Value</h4>
                         <p className="text-lemon font-bold text-2xl">R{searchResult.estimatedValue?.toLocaleString()}</p>
+                        {searchResult.offeredAmount && (
+                          <p className="text-cyan-400 font-semibold text-lg">
+                            Offered: R{searchResult.offeredAmount.toLocaleString()}
+                          </p>
+                        )}
                       </div>
                       <div>
                         <h4 className="text-gray-400 text-sm font-medium">Contact Information</h4>
@@ -247,11 +266,27 @@ const Track = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
+                    {searchResult.status === "Awaiting Offer" && (
+                      <div className="p-4 bg-orange-500/20 border border-orange-500/30 rounded-lg">
+                        <p className="text-white font-medium">Agent Preparing Offer</p>
+                        <p className="text-gray-300 text-sm">
+                          Your device has been assessed and the agent is preparing an offer. You will be contacted within 24 hours.
+                        </p>
+                      </div>
+                    )}
                     {searchResult.status === "Device Assessed" && (
                       <div className="p-4 bg-blue-500/20 border border-blue-500/30 rounded-lg">
                         <p className="text-white font-medium">Assessment Complete</p>
                         <p className="text-gray-300 text-sm">
-                          Your device has been assessed. You will receive payment confirmation within 1-2 business days.
+                          Your device has been assessed. You will receive an offer within 1-2 business days.
+                        </p>
+                      </div>
+                    )}
+                    {searchResult.status === "Offer Made" && (
+                      <div className="p-4 bg-cyan-500/20 border border-cyan-500/30 rounded-lg">
+                        <p className="text-white font-medium">Offer Received</p>
+                        <p className="text-gray-300 text-sm">
+                          An offer has been made for your device. Please check your email for details and respond to accept or decline.
                         </p>
                       </div>
                     )}
