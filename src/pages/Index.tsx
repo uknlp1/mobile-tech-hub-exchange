@@ -1,10 +1,56 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Smartphone, Laptop, Wrench, ShoppingCart, DollarSign, Shield, Clock, Star } from "lucide-react";
+import { Smartphone, Laptop, Wrench, ShoppingCart, DollarSign, Shield, Clock, Star, Quote } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 
 const Index = () => {
+  const testimonials = [
+    {
+      name: "Sarah Johnson",
+      role: "Customer",
+      content: "Sold my iPhone 13 through QuickBuy and got an amazing price! The process was quick and transparent. Highly recommended!",
+      rating: 5,
+      image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face"
+    },
+    {
+      name: "Michael Chen",
+      role: "Customer", 
+      content: "Bought a refurbished MacBook Pro and it's in perfect condition. Great warranty and excellent customer service!",
+      rating: 5,
+      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face"
+    },
+    {
+      name: "Priya Patel",
+      role: "Customer",
+      content: "Their repair service is fantastic! Fixed my Samsung Galaxy screen in just 2 hours. Professional and affordable.",
+      rating: 5,
+      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face"
+    },
+    {
+      name: "David Williams",
+      role: "Customer",
+      content: "I've been buying and selling devices with QuickBuy for over a year. Trustworthy platform with fair prices.",
+      rating: 5,
+      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
+    },
+    {
+      name: "Lisa Thompson",
+      role: "Customer",
+      content: "Amazing experience! They handled my laptop repair with care and kept me updated throughout the process.",
+      rating: 5,
+      image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face"
+    },
+    {
+      name: "James Robertson",
+      role: "Customer",
+      content: "Quick cash for my old devices and excellent customer support. QuickBuy makes selling electronics hassle-free!",
+      rating: 5,
+      image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face"
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800">
       <Navigation />
@@ -128,8 +174,45 @@ const Index = () => {
                 <Star className="h-10 w-10 text-lemon" />
               </div>
               <h3 className="text-xl sm:text-2xl font-semibold text-white mb-2 font-poppins">5-Star Service</h3>
-              <p className="text-gray-400 font-inter">Rated by thousands of satisfied customers across the country.</p>
+              <p className="text-gray-400 font-inter">Rated by thousands of satisfied customers across South Africa.</p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center text-white mb-12 sm:mb-16 font-poppins">What Our Customers Say</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            {testimonials.map((testimonial, index) => (
+              <Card key={index} className="bg-gray-800/50 backdrop-blur-sm border-gray-700 hover:border-lemon/30 transition-all duration-300">
+                <CardHeader className="pb-4">
+                  <div className="flex items-center gap-4">
+                    <img 
+                      src={testimonial.image} 
+                      alt={testimonial.name}
+                      className="w-12 h-12 rounded-full object-cover"
+                    />
+                    <div>
+                      <h4 className="text-white font-semibold font-poppins">{testimonial.name}</h4>
+                      <p className="text-gray-400 text-sm">{testimonial.role}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    {Array.from({ length: testimonial.rating }).map((_, i) => (
+                      <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
+                    ))}
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="relative">
+                    <Quote className="h-8 w-8 text-lemon/30 absolute -top-2 -left-2" />
+                    <p className="text-gray-300 font-inter italic pl-6">"{testimonial.content}"</p>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
@@ -158,7 +241,7 @@ const Index = () => {
             <div>
               <h3 className="text-lg font-semibold mb-4 font-poppins">Support</h3>
               <ul className="space-y-2 text-gray-400 font-inter">
-                <li><a href="#" className="hover:text-lemon transition-colors">Contact Us</a></li>
+                <li><Link to="/contact" className="hover:text-lemon transition-colors">Contact Us</Link></li>
                 <li><a href="#" className="hover:text-lemon transition-colors">FAQ</a></li>
                 <li><a href="#" className="hover:text-lemon transition-colors">Warranty</a></li>
               </ul>
