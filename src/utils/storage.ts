@@ -13,6 +13,7 @@ export interface Agent {
   assignedDevices: number;
   completedAssessments: number;
   joinDate: string;
+  profilePicture?: string;
 }
 
 export interface Customer {
@@ -25,6 +26,12 @@ export interface Customer {
   totalSales: number;
   joinDate: string;
   lastActivity: string;
+  address?: {
+    apartment?: string;
+    city?: string;
+    province?: string;
+    postalCode?: string;
+  };
 }
 
 export interface Device {
@@ -47,13 +54,25 @@ export interface Transaction {
   transactionNumber: string;
   customerName: string;
   customerEmail: string;
+  customerPhone?: string;
   deviceInfo: string;
+  deviceType: string;
+  brand: string;
+  model: string;
+  condition: string;
   status: string;
   amount: number;
+  estimatedValue?: number;
   offeredAmount: number | null;
   submittedDate: string;
   agentId?: string;
   agentName?: string;
+  address?: string;
+  statusHistory?: Array<{
+    status: string;
+    date: string;
+    description: string;
+  }>;
 }
 
 // Storage keys
@@ -61,7 +80,11 @@ const STORAGE_KEYS = {
   AGENTS: 'quickbuy_agents',
   CUSTOMERS: 'quickbuy_customers',
   DEVICES: 'quickbuy_devices',
-  TRANSACTIONS: 'quickbuy_transactions'
+  TRANSACTIONS: 'quickbuy_transactions',
+  CURRENT_USER: 'currentUser',
+  CURRENT_AGENT: 'currentAgent',
+  IS_ADMIN: 'isAdmin',
+  ADMIN_PROFILE: 'adminProfile'
 };
 
 // Generic storage functions
@@ -180,11 +203,17 @@ export const loadTransactions = (): Transaction[] => {
       transactionNumber: "TXN1705123456789",
       customerName: "John Doe",
       customerEmail: "john.doe@example.com",
+      customerPhone: "+27 82 111 2222",
       deviceInfo: "iPhone 13 Pro - 256GB",
+      deviceType: "phone",
+      brand: "Apple",
+      model: "iPhone 13 Pro",
+      condition: "Good",
       status: "Awaiting Offer",
       amount: 12500,
+      estimatedValue: 12500,
       offeredAmount: null,
-      submittedDate: "2024-01-12",
+      submittedDate: "2024-01-12T10:00:00Z",
       agentId: "AGT001",
       agentName: "Sarah Mitchell"
     },
@@ -193,11 +222,17 @@ export const loadTransactions = (): Transaction[] => {
       transactionNumber: "TXN1704987654321",
       customerName: "Jane Smith",
       customerEmail: "jane.smith@example.com",
+      customerPhone: "+27 83 555 7777",
       deviceInfo: "MacBook Pro 13\" - 512GB",
+      deviceType: "laptop",
+      brand: "Apple",
+      model: "MacBook Pro 13\"",
+      condition: "Good",
       status: "Device Assessed",
       amount: 18500,
+      estimatedValue: 18500,
       offeredAmount: null,
-      submittedDate: "2024-01-10",
+      submittedDate: "2024-01-10T08:00:00Z",
       agentId: "AGT002",
       agentName: "Michael Johnson"
     }
@@ -215,4 +250,95 @@ export const authenticateAgent = (username: string, password: string): Agent | n
 export const authenticateAdmin = (email: string, password: string): boolean => {
   // Simple admin authentication - in real app this would be more secure
   return email === "admin@quickbuy.co.za" && password === "admin123";
+};
+
+export const authenticateCustomer = (email: string, password: string): Customer | null => {
+  const customers = loadCustomers();
+  return customers.find(customer => 
+    customer.email === email
+  ) || null;
+};
+
+// Transaction update functions
+export const updateTransactionStatus = (transactionNumber: string, status: string, offeredAmount?: number): void => {
+  const transactions = loadTransactions();
+  const updatedTransactions = transactions.map(txn => {
+    if (txn.transactionNumber === transactionNumber) {
+      const updatedTxn = { ...txn, status };
+      if (offeredAmount !== undefined) {
+        updatedTxn.offeredAmount = offeredAmount;
+      }
+      
+      // Update status history
+      if (!updatedTxn.statusHistory) {
+        updatedTxn.statusHistory = [];
+      }
+      
+      updatedTxn.statusHistory.push({
+        status,
+        date: new Date().toISOString(),
+        description: getStatusDescription(status, offeredAmount)
+      });
+      
+      return updatedTxn;
+    }
+    return txn;
+  });
+  
+  saveTransactions(updatedTransactions);
+};
+
+const getStatusDescription = (status: string, offeredAmount?: number): string => {
+  switch (status.toLowerCase()) {
+    case "awaiting confirmation":
+      return "Device details submitted for review";
+    case "confirmed":
+      return "Device information verified and approved";
+    case "assigned to agent":
+      return "Agent assigned for physical assessment";
+    case "device assessed":
+      return "Physical assessment completed";
+    case "awaiting offer":
+      return "Agent is preparing the offer based on assessment";
+    case "offer made":
+      return `Offer of R${offeredAmount?.toLocaleString()} has been made. Please respond to accept or decline.`;
+    case "awaiting payment":
+      return "Payment is being processed";
+    case "paid":
+      return "Payment completed successfully";
+    default:
+      return "Status updated";
+  }
+};
+
+// Profile update functions
+export const updateAgentProfile = (agentId: string, updates: Partial<Agent>): void => {
+  const agents = loadAgents();
+  const updatedAgents = agents.map(agent => 
+    agent.id === agentId ? { ...agent, ...updates } : agent
+  );
+  saveAgents(updatedAgents);
+  
+  // Update current agent if it's the one being updated
+  const currentAgent = loadFromStorage(STORAGE_KEYS.CURRENT_AGENT, null);
+  if (currentAgent && currentAgent.id === agentId) {
+    saveToStorage(STORAGE_KEYS.CURRENT_AGENT, { ...currentAgent, ...updates });
+  }
+};
+
+export const registerCustomer = (customerData: Omit<Customer, 'id' | 'status' | 'totalPurchases' | 'totalSales' | 'joinDate' | 'lastActivity'>): Customer => {
+  const customers = loadCustomers();
+  const newCustomer: Customer = {
+    ...customerData,
+    id: `CUST${Date.now()}`,
+    status: "Active",
+    totalPurchases: 0,
+    totalSales: 0,
+    joinDate: new Date().toISOString(),
+    lastActivity: new Date().toISOString()
+  };
+  
+  customers.push(newCustomer);
+  saveCustomers(customers);
+  return newCustomer;
 };
