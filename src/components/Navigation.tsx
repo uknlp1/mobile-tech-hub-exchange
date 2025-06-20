@@ -84,7 +84,7 @@ const Navigation = () => {
             <div className="p-2 bg-lemon rounded-lg">
               <Smartphone className="h-6 w-6 text-black" />
             </div>
-            <span className="text-2xl font-bold text-white font-poppins">QuickBuy</span>
+            <span className="text-white font-poppins text-3xl font-bold">Quickbuy</span>
           </Link>
 
           {/* Desktop Navigation */}
