@@ -118,10 +118,10 @@ const Navigation = () => {
                   </Button>
                 </Link>
               </> : <div className="flex items-center space-x-4">
-                <span className="text-gray-300 text-sm">
+                <span className="text-gray-300 text-lg">
                   {isAgent ? "Agent: " : isAdmin ? "Admin: " : ""}{userEmail}
                 </span>
-                <Button onClick={handleLogout} variant="outline" className="border-lemon text-lemon hover:bg-lemon hover:text-black">
+                <Button onClick={handleLogout} variant="outline" className="border-lemon hover:bg-lemon text-zinc-950">
                   <LogOut className="h-4 w-4 mr-2" />
                   Logout
                 </Button>
