@@ -239,7 +239,7 @@ const Index = () => {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400 font-inter">
-            <p>&copy; 2024 QuickBuy. All rights reserved.</p>
+            <p className="text-slate-50">© 2025 QuickBuy. All rights reserved. Designed by w.ojinmah@gmail.com</p>
           </div>
         </div>
       </footer>
