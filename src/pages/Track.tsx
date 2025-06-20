@@ -30,14 +30,19 @@ const Track = () => {
     
     // Simulate API call
     setTimeout(() => {
+      // First check stored transactions for real data
       const transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
       const found = transactions.find((t: any) => t.transactionNumber === searchTerm.trim());
       
       if (found) {
-        // Use the actual stored transaction with real offer amount
-        setSearchResult(found);
+        // Create enhanced transaction with status history
+        const enhancedTransaction = {
+          ...found,
+          statusHistory: generateStatusHistory(found.status, found.submittedDate, found.offeredAmount)
+        };
+        setSearchResult(enhancedTransaction);
       } else {
-        // Mock data for demonstration with updated status
+        // Mock data for demonstration
         setSearchResult({
           transactionNumber: searchTerm,
           deviceType: "phone",
@@ -50,42 +55,121 @@ const Track = () => {
           contactEmail: "customer@example.com",
           estimatedValue: 12500,
           offeredAmount: 11000,
-          statusHistory: [
-            {
-              status: "Awaiting Confirmation",
-              date: "2024-01-10T10:00:00Z",
-              description: "Device details submitted for review"
-            },
-            {
-              status: "Confirmed",
-              date: "2024-01-10T14:30:00Z",
-              description: "Device information verified and approved"
-            },
-            {
-              status: "Assigned to Agent",
-              date: "2024-01-11T09:15:00Z",
-              description: "Agent Sarah M. assigned for physical assessment"
-            },
-            {
-              status: "Device Assessed",
-              date: "2024-01-12T16:45:00Z",
-              description: "Physical assessment completed. Final quote generated."
-            },
-            {
-              status: "Awaiting Offer",
-              date: "2024-01-13T11:30:00Z",
-              description: "Agent is preparing the offer based on assessment"
-            },
-            {
-              status: "Offer Made",
-              date: "2024-01-14T09:00:00Z",
-              description: "Offer of R11,000 has been made. Please respond to accept or decline."
-            }
-          ]
+          statusHistory: generateStatusHistory("Offer Made", "2024-01-10T10:00:00Z", 11000)
         });
       }
       setIsLoading(false);
     }, 1000);
+  };
+
+  const generateStatusHistory = (currentStatus: string, submittedDate: string, offeredAmount?: number) => {
+    const baseHistory = [
+      {
+        status: "Awaiting Confirmation",
+        date: submittedDate,
+        description: "Device details submitted for review"
+      },
+      {
+        status: "Confirmed",
+        date: addHours(submittedDate, 4),
+        description: "Device information verified and approved"
+      },
+      {
+        status: "Assigned to Agent",
+        date: addHours(submittedDate, 24),
+        description: "Agent assigned for physical assessment"
+      }
+    ];
+
+    // Add additional status based on current status
+    switch (currentStatus.toLowerCase()) {
+      case "device assessed":
+        baseHistory.push({
+          status: "Device Assessed",
+          date: addHours(submittedDate, 48),
+          description: "Physical assessment completed. Final quote being prepared."
+        });
+        break;
+      case "awaiting offer":
+        baseHistory.push(
+          {
+            status: "Device Assessed",
+            date: addHours(submittedDate, 48),
+            description: "Physical assessment completed. Final quote being prepared."
+          },
+          {
+            status: "Awaiting Offer",
+            date: addHours(submittedDate, 72),
+            description: "Agent is preparing the offer based on assessment"
+          }
+        );
+        break;
+      case "offer made":
+        baseHistory.push(
+          {
+            status: "Device Assessed",
+            date: addHours(submittedDate, 48),
+            description: "Physical assessment completed. Final quote generated."
+          },
+          {
+            status: "Awaiting Offer",
+            date: addHours(submittedDate, 72),
+            description: "Agent is preparing the offer based on assessment"
+          },
+          {
+            status: "Offer Made",
+            date: addHours(submittedDate, 96),
+            description: `Offer of R${offeredAmount?.toLocaleString()} has been made. Please respond to accept or decline.`
+          }
+        );
+        break;
+      case "awaiting payment":
+        baseHistory.push(
+          {
+            status: "Device Assessed",
+            date: addHours(submittedDate, 48),
+            description: "Physical assessment completed."
+          },
+          {
+            status: "Offer Made",
+            date: addHours(submittedDate, 72),
+            description: `Offer of R${offeredAmount?.toLocaleString()} accepted.`
+          },
+          {
+            status: "Awaiting Payment",
+            date: addHours(submittedDate, 96),
+            description: "Payment is being processed."
+          }
+        );
+        break;
+      case "paid":
+        baseHistory.push(
+          {
+            status: "Device Assessed",
+            date: addHours(submittedDate, 48),
+            description: "Physical assessment completed."
+          },
+          {
+            status: "Offer Made",
+            date: addHours(submittedDate, 72),
+            description: `Offer of R${offeredAmount?.toLocaleString()} accepted.`
+          },
+          {
+            status: "Paid",
+            date: addHours(submittedDate, 120),
+            description: "Payment completed successfully."
+          }
+        );
+        break;
+    }
+
+    return baseHistory;
+  };
+
+  const addHours = (dateString: string, hours: number) => {
+    const date = new Date(dateString);
+    date.setHours(date.getHours() + hours);
+    return date.toISOString();
   };
 
   const getStatusIcon = (status: string) => {

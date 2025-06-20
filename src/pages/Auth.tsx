@@ -1,9 +1,11 @@
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Smartphone, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
@@ -26,8 +28,24 @@ const Auth = () => {
     email: "",
     phone: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
+    apartment: "",
+    city: "",
+    province: "",
+    postalCode: ""
   });
+
+  const southAfricanProvinces = [
+    "Eastern Cape",
+    "Free State",
+    "Gauteng",
+    "KwaZulu-Natal",
+    "Limpopo",
+    "Mpumalanga",
+    "Northern Cape",
+    "North West",
+    "Western Cape"
+  ];
 
   const handleLoginSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,11 +73,18 @@ const Auth = () => {
     
     console.log("Signup attempted with:", signupData);
     
-    // Store user session
+    // Store user session with address information
     localStorage.setItem('currentUser', JSON.stringify({
       email: signupData.email,
       firstName: signupData.firstName,
-      lastName: signupData.lastName
+      lastName: signupData.lastName,
+      phone: signupData.phone,
+      address: {
+        apartment: signupData.apartment,
+        city: signupData.city,
+        province: signupData.province,
+        postalCode: signupData.postalCode
+      }
     }));
     
     toast.success("Account created successfully!");
@@ -78,6 +103,13 @@ const Auth = () => {
     setSignupData({
       ...signupData,
       [e.target.name]: e.target.value
+    });
+  };
+
+  const handleProvinceChange = (value: string) => {
+    setSignupData({
+      ...signupData,
+      province: value
     });
   };
 
@@ -222,6 +254,64 @@ const Auth = () => {
                       type="tel"
                       placeholder="+27 82 123 4567"
                       value={signupData.phone}
+                      onChange={handleSignupInputChange}
+                      className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400"
+                      required
+                    />
+                  </div>
+
+                  {/* Address Fields */}
+                  <div>
+                    <Label htmlFor="apartment" className="text-gray-300">Apartment/Unit Number</Label>
+                    <Input
+                      id="apartment"
+                      name="apartment"
+                      type="text"
+                      placeholder="Apt 4B, Unit 123"
+                      value={signupData.apartment}
+                      onChange={handleSignupInputChange}
+                      className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="city" className="text-gray-300">City</Label>
+                    <Input
+                      id="city"
+                      name="city"
+                      type="text"
+                      placeholder="Cape Town"
+                      value={signupData.city}
+                      onChange={handleSignupInputChange}
+                      className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="province" className="text-gray-300">Province</Label>
+                    <Select onValueChange={handleProvinceChange} required>
+                      <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                        <SelectValue placeholder="Select a province" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-gray-700 border-gray-600">
+                        {southAfricanProvinces.map((province) => (
+                          <SelectItem key={province} value={province} className="text-white hover:bg-gray-600">
+                            {province}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="postalCode" className="text-gray-300">Postal Code</Label>
+                    <Input
+                      id="postalCode"
+                      name="postalCode"
+                      type="text"
+                      placeholder="8001"
+                      value={signupData.postalCode}
                       onChange={handleSignupInputChange}
                       className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400"
                       required
