@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -33,8 +32,17 @@ const Auth = () => {
   const handleLoginSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Login attempted with:", loginData);
+    
+    // Store user session
+    localStorage.setItem('currentUser', JSON.stringify({
+      email: loginData.email,
+      firstName: 'User',
+      lastName: 'Name'
+    }));
+    
     toast.success("Login successful!");
     navigate("/account");
+    window.location.reload(); // Refresh to update navigation
   };
 
   const handleSignupSubmit = (e: React.FormEvent) => {
@@ -46,8 +54,17 @@ const Auth = () => {
     }
     
     console.log("Signup attempted with:", signupData);
+    
+    // Store user session
+    localStorage.setItem('currentUser', JSON.stringify({
+      email: signupData.email,
+      firstName: signupData.firstName,
+      lastName: signupData.lastName
+    }));
+    
     toast.success("Account created successfully!");
     navigate("/account");
+    window.location.reload(); // Refresh to update navigation
   };
 
   const handleLoginInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

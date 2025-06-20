@@ -1,6 +1,6 @@
 
-import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { 
   Smartphone, 
@@ -10,20 +10,45 @@ import {
   DollarSign, 
   Wrench, 
   FileText, 
-  User 
+  User,
+  LogOut
 } from "lucide-react";
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
   const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if user is logged in by checking localStorage
+    const loggedInUser = localStorage.getItem('currentUser');
+    if (loggedInUser) {
+      setIsLoggedIn(true);
+      const userData = JSON.parse(loggedInUser);
+      setUserEmail(userData.email);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('currentUser');
+    setIsLoggedIn(false);
+    setUserEmail("");
+    navigate('/');
+  };
 
   const navItems = [
     { name: "Buy", path: "/buy", icon: ShoppingCart },
     { name: "Sell", path: "/sell", icon: DollarSign },
     { name: "Repairs", path: "/repairs", icon: Wrench },
     { name: "Track Orders", path: "/track", icon: FileText },
-    { name: "Account", path: "/account", icon: User },
   ];
+
+  // Only show Account if user is logged in
+  if (isLoggedIn) {
+    navItems.push({ name: "Account", path: "/account", icon: User });
+  }
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -62,21 +87,40 @@ const Navigation = () => {
 
           {/* Auth Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link to="/agent-login">
-              <Button variant="ghost" className="text-gray-300 hover:text-lemon hover:bg-lemon/10">
-                Agent Login
-              </Button>
-            </Link>
-            <Link to="/login">
-              <Button variant="outline" className="border-lemon text-lemon hover:bg-lemon hover:text-black">
-                Login
-              </Button>
-            </Link>
-            <Link to="/signup">
-              <Button className="bg-lemon hover:bg-lemon-dark text-black">
-                Sign Up
-              </Button>
-            </Link>
+            {!isLoggedIn && (
+              <Link to="/agent-login">
+                <Button variant="ghost" className="text-gray-300 hover:text-lemon hover:bg-lemon/10">
+                  Agent Login
+                </Button>
+              </Link>
+            )}
+            
+            {!isLoggedIn ? (
+              <>
+                <Link to="/login">
+                  <Button variant="outline" className="border-lemon text-lemon hover:bg-lemon hover:text-black">
+                    Login
+                  </Button>
+                </Link>
+                <Link to="/signup">
+                  <Button className="bg-lemon hover:bg-lemon-dark text-black">
+                    Sign Up
+                  </Button>
+                </Link>
+              </>
+            ) : (
+              <div className="flex items-center space-x-4">
+                <span className="text-gray-300 text-sm">{userEmail}</span>
+                <Button 
+                  onClick={handleLogout}
+                  variant="outline" 
+                  className="border-lemon text-lemon hover:bg-lemon hover:text-black"
+                >
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Logout
+                </Button>
+              </div>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -111,21 +155,43 @@ const Navigation = () => {
                 );
               })}
               <div className="flex flex-col space-y-2 pt-4 border-t border-gray-700">
-                <Link to="/agent-login" onClick={() => setIsMenuOpen(false)}>
-                  <Button variant="ghost" className="w-full text-gray-300 hover:text-lemon hover:bg-lemon/10">
-                    Agent Login
-                  </Button>
-                </Link>
-                <Link to="/login" onClick={() => setIsMenuOpen(false)}>
-                  <Button variant="outline" className="w-full border-lemon text-lemon hover:bg-lemon hover:text-black">
-                    Login
-                  </Button>
-                </Link>
-                <Link to="/signup" onClick={() => setIsMenuOpen(false)}>
-                  <Button className="w-full bg-lemon hover:bg-lemon-dark text-black">
-                    Sign Up
-                  </Button>
-                </Link>
+                {!isLoggedIn && (
+                  <Link to="/agent-login" onClick={() => setIsMenuOpen(false)}>
+                    <Button variant="ghost" className="w-full text-gray-300 hover:text-lemon hover:bg-lemon/10">
+                      Agent Login
+                    </Button>
+                  </Link>
+                )}
+                
+                {!isLoggedIn ? (
+                  <>
+                    <Link to="/login" onClick={() => setIsMenuOpen(false)}>
+                      <Button variant="outline" className="w-full border-lemon text-lemon hover:bg-lemon hover:text-black">
+                        Login
+                      </Button>
+                    </Link>
+                    <Link to="/signup" onClick={() => setIsMenuOpen(false)}>
+                      <Button className="w-full bg-lemon hover:bg-lemon-dark text-black">
+                        Sign Up
+                      </Button>
+                    </Link>
+                  </>
+                ) : (
+                  <div className="space-y-2">
+                    <p className="text-gray-300 text-sm px-3">{userEmail}</p>
+                    <Button 
+                      onClick={() => {
+                        handleLogout();
+                        setIsMenuOpen(false);
+                      }}
+                      variant="outline" 
+                      className="w-full border-lemon text-lemon hover:bg-lemon hover:text-black"
+                    >
+                      <LogOut className="h-4 w-4 mr-2" />
+                      Logout
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
           </div>

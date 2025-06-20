@@ -6,7 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Smartphone, Laptop, Upload, CheckCircle } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Smartphone, Laptop, Tv, Upload, CheckCircle } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 
@@ -17,11 +18,14 @@ const Sell = () => {
     model: "",
     condition: "",
     storage: "",
+    ram: "",
     color: "",
     accessories: "",
     description: "",
     contactPhone: "",
-    contactEmail: ""
+    contactEmail: "",
+    address: "",
+    isOwner: false
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [transactionNumber, setTransactionNumber] = useState("");
@@ -45,7 +49,8 @@ const Sell = () => {
       submittedDate: new Date().toISOString(),
       contactPhone: formData.contactPhone,
       contactEmail: formData.contactEmail,
-      estimatedValue: Math.floor(Math.random() * 15000) + 2000, // Random value between R2000-R17000
+      address: formData.address,
+      estimatedValue: Math.floor(Math.random() * 15000) + 2000,
       statusHistory: [
         {
           status: "Awaiting Confirmation",
@@ -55,14 +60,13 @@ const Sell = () => {
       ]
     };
     
-    // Store in localStorage (in real app, this would be sent to backend)
+    // Store in localStorage
     const existingTransactions = JSON.parse(localStorage.getItem('transactions') || '[]');
     existingTransactions.push(transaction);
     localStorage.setItem('transactions', JSON.stringify(existingTransactions));
     
     setIsSubmitted(true);
     
-    // Simulate email sending
     console.log(`Transaction ${txnNumber} created and confirmation sent to ${formData.contactEmail}`);
   };
 
@@ -117,7 +121,7 @@ const Sell = () => {
               Sell Your Device
             </h1>
             <p className="text-xl text-gray-300 font-inter">
-              Get an instant quote for your phone or laptop
+              Get an instant quote for your phone, laptop, or TV
             </p>
           </div>
 
@@ -132,7 +136,7 @@ const Sell = () => {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <Label className="text-gray-300 text-base font-medium">Device Type</Label>
-                  <div className="grid grid-cols-2 gap-4 mt-2">
+                  <div className="grid grid-cols-3 gap-4 mt-2">
                     <div
                       className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
                         deviceType === "phone"
@@ -155,6 +159,17 @@ const Sell = () => {
                       <Laptop className="h-8 w-8 text-lemon mx-auto mb-2" />
                       <p className="text-center text-white font-medium">Laptop</p>
                     </div>
+                    <div
+                      className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                        deviceType === "tv"
+                          ? "border-lemon bg-lemon/10"
+                          : "border-gray-600 hover:border-gray-500"
+                      }`}
+                      onClick={() => setDeviceType("tv")}
+                    >
+                      <Tv className="h-8 w-8 text-lemon mx-auto mb-2" />
+                      <p className="text-center text-white font-medium">TV</p>
+                    </div>
                   </div>
                 </div>
 
@@ -174,13 +189,21 @@ const Sell = () => {
                             <SelectItem value="xiaomi">Xiaomi</SelectItem>
                             <SelectItem value="oppo">Oppo</SelectItem>
                           </>
-                        ) : (
+                        ) : deviceType === "laptop" ? (
                           <>
                             <SelectItem value="apple">Apple</SelectItem>
                             <SelectItem value="dell">Dell</SelectItem>
                             <SelectItem value="hp">HP</SelectItem>
                             <SelectItem value="lenovo">Lenovo</SelectItem>
                             <SelectItem value="asus">Asus</SelectItem>
+                          </>
+                        ) : (
+                          <>
+                            <SelectItem value="samsung">Samsung</SelectItem>
+                            <SelectItem value="lg">LG</SelectItem>
+                            <SelectItem value="sony">Sony</SelectItem>
+                            <SelectItem value="hisense">Hisense</SelectItem>
+                            <SelectItem value="tcl">TCL</SelectItem>
                           </>
                         )}
                       </SelectContent>
@@ -231,17 +254,74 @@ const Sell = () => {
                             <SelectItem value="512gb">512GB</SelectItem>
                             <SelectItem value="1tb">1TB</SelectItem>
                           </>
-                        ) : (
+                        ) : deviceType === "laptop" ? (
                           <>
                             <SelectItem value="256gb">256GB SSD</SelectItem>
                             <SelectItem value="512gb">512GB SSD</SelectItem>
                             <SelectItem value="1tb">1TB SSD</SelectItem>
                             <SelectItem value="2tb">2TB SSD</SelectItem>
                           </>
+                        ) : (
+                          <>
+                            <SelectItem value="none">N/A</SelectItem>
+                          </>
                         )}
                       </SelectContent>
                     </Select>
                   </div>
+                </div>
+
+                {(deviceType === "phone" || deviceType === "laptop") && (
+                  <div>
+                    <Label className="text-gray-300">RAM Size</Label>
+                    <Select onValueChange={(value) => setFormData({...formData, ram: value})}>
+                      <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                        <SelectValue placeholder="Select RAM size" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {deviceType === "phone" ? (
+                          <>
+                            <SelectItem value="4gb">4GB</SelectItem>
+                            <SelectItem value="6gb">6GB</SelectItem>
+                            <SelectItem value="8gb">8GB</SelectItem>
+                            <SelectItem value="12gb">12GB</SelectItem>
+                            <SelectItem value="16gb">16GB</SelectItem>
+                          </>
+                        ) : (
+                          <>
+                            <SelectItem value="8gb">8GB</SelectItem>
+                            <SelectItem value="16gb">16GB</SelectItem>
+                            <SelectItem value="32gb">32GB</SelectItem>
+                            <SelectItem value="64gb">64GB</SelectItem>
+                          </>
+                        )}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+
+                <div>
+                  <Label htmlFor="address" className="text-gray-300">Address</Label>
+                  <Input
+                    id="address"
+                    placeholder="Enter your full address"
+                    value={formData.address}
+                    onChange={(e) => setFormData({...formData, address: e.target.value})}
+                    className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400"
+                    required
+                  />
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="owner" 
+                    checked={formData.isOwner}
+                    onCheckedChange={(checked) => setFormData({...formData, isOwner: !!checked})}
+                    required
+                  />
+                  <Label htmlFor="owner" className="text-gray-300">
+                    I am the owner of this device
+                  </Label>
                 </div>
 
                 <div>
@@ -287,7 +367,7 @@ const Sell = () => {
                   <Button 
                     type="submit" 
                     className="w-full bg-lemon hover:bg-lemon-dark text-black font-semibold py-3 text-lg"
-                    disabled={!deviceType}
+                    disabled={!deviceType || !formData.isOwner}
                   >
                     Get Instant Quote
                   </Button>

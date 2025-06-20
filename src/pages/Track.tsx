@@ -24,16 +24,17 @@ const Track = () => {
       const found = transactions.find((t: any) => t.transactionNumber === searchTerm.trim());
       
       if (found) {
+        // Use the actual stored transaction
         setSearchResult(found);
       } else {
-        // Mock data for demonstration
+        // Mock data for demonstration with updated status
         setSearchResult({
           transactionNumber: searchTerm,
           deviceType: "phone",
           brand: "Apple",
           model: "iPhone 14 Pro",
           condition: "Good",
-          status: "Awaiting Offer",
+          status: "Offer Made",
           submittedDate: "2024-01-10T10:00:00Z",
           contactPhone: "+27 82 123 4567",
           contactEmail: "customer@example.com",
@@ -64,6 +65,11 @@ const Track = () => {
               status: "Awaiting Offer",
               date: "2024-01-13T11:30:00Z",
               description: "Agent is preparing the offer based on assessment"
+            },
+            {
+              status: "Offer Made",
+              date: "2024-01-14T09:00:00Z",
+              description: "Offer of R11,000 has been made. Please respond to accept or decline."
             }
           ]
         });
@@ -266,6 +272,23 @@ const Track = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
+                    {searchResult.status === "Offer Made" && (
+                      <div className="p-4 bg-cyan-500/20 border border-cyan-500/30 rounded-lg">
+                        <p className="text-white font-medium">Offer Received!</p>
+                        <p className="text-gray-300 text-sm">
+                          We've made an offer of R{searchResult.offeredAmount?.toLocaleString()} for your device. 
+                          Please check your email for details and respond to accept or decline the offer.
+                        </p>
+                        <div className="flex gap-3 mt-3">
+                          <Button className="bg-green-600 hover:bg-green-700 text-white">
+                            Accept Offer
+                          </Button>
+                          <Button variant="outline" className="border-red-600 text-red-400 hover:bg-red-600 hover:text-white">
+                            Decline Offer
+                          </Button>
+                        </div>
+                      </div>
+                    )}
                     {searchResult.status === "Awaiting Offer" && (
                       <div className="p-4 bg-orange-500/20 border border-orange-500/30 rounded-lg">
                         <p className="text-white font-medium">Agent Preparing Offer</p>
@@ -279,14 +302,6 @@ const Track = () => {
                         <p className="text-white font-medium">Assessment Complete</p>
                         <p className="text-gray-300 text-sm">
                           Your device has been assessed. You will receive an offer within 1-2 business days.
-                        </p>
-                      </div>
-                    )}
-                    {searchResult.status === "Offer Made" && (
-                      <div className="p-4 bg-cyan-500/20 border border-cyan-500/30 rounded-lg">
-                        <p className="text-white font-medium">Offer Received</p>
-                        <p className="text-gray-300 text-sm">
-                          An offer has been made for your device. Please check your email for details and respond to accept or decline.
                         </p>
                       </div>
                     )}
