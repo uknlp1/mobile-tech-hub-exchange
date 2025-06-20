@@ -108,7 +108,7 @@ const Navigation = () => {
             
             {!isLoggedIn ? <>
                 <Link to="/auth">
-                  <Button variant="outline" className="border-lemon hover:bg-lemon text-zinc-950 text-lg">Login/Sign up</Button>
+                  <Button variant="outline" className="border-lemon hover:bg-lemon text-zinc-950 text-lg">Login/SignUp</Button>
                 </Link>
                 <Link to="/sell">
                   
