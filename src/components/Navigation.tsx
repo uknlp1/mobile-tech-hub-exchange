@@ -108,14 +108,10 @@ const Navigation = () => {
             
             {!isLoggedIn ? <>
                 <Link to="/auth">
-                  <Button variant="outline" className="border-lemon hover:bg-lemon text-zinc-950 text-lg">
-                    Login
-                  </Button>
+                  <Button variant="outline" className="border-lemon hover:bg-lemon text-zinc-950 text-lg">Login/Sign up</Button>
                 </Link>
                 <Link to="/sell">
-                  <Button className="bg-lemon hover:bg-lemon-dark text-black text-lg">
-                    Sell Your Device
-                  </Button>
+                  
                 </Link>
               </> : <div className="flex items-center space-x-4">
                 <span className="text-gray-300 text-lg">
