@@ -23,6 +23,28 @@ const Admin = () => {
     txn.status === "Awaiting Confirmation" || txn.status === "Assigned to Agent"
   ).length;
 
+  // Handler functions for AgentManagement
+  const handleCreateAgent = (agentData: any) => {
+    console.log("Creating agent:", agentData);
+    // Implementation would be added here
+  };
+
+  const handleUpdateAgent = (agentId: string, updates: any) => {
+    console.log("Updating agent:", agentId, updates);
+    // Implementation would be added here
+  };
+
+  const handleDeleteAgent = (agentId: string) => {
+    console.log("Deleting agent:", agentId);
+    // Implementation would be added here
+  };
+
+  // Handler functions for DeviceManagement
+  const handleAddDevice = (deviceData: any) => {
+    console.log("Adding device:", deviceData);
+    // Implementation would be added here
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800">
       <Navigation />
@@ -142,11 +164,19 @@ const Admin = () => {
             </TabsContent>
 
             <TabsContent value="agents">
-              <AgentManagement />
+              <AgentManagement 
+                agents={agents}
+                onCreateAgent={handleCreateAgent}
+                onUpdateAgent={handleUpdateAgent}
+                onDeleteAgent={handleDeleteAgent}
+              />
             </TabsContent>
 
             <TabsContent value="devices">
-              <DeviceManagement />
+              <DeviceManagement 
+                devices={devices}
+                onAddDevice={handleAddDevice}
+              />
             </TabsContent>
 
             <TabsContent value="transactions" className="space-y-6">
