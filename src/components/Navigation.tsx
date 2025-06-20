@@ -101,7 +101,7 @@ const Navigation = () => {
           {/* Auth Buttons */}
           <div className="hidden md:flex items-center space-x-4">
             {!isLoggedIn && <Link to="/agent-login">
-                <Button variant="ghost" className="hover:bg-lemon/10 text-slate-50 text-lg">
+                <Button variant="ghost" className="hover:bg-lemon/10 text-slate-50 text-lg rounded-sm font-normal">
                   Agent Login
                 </Button>
               </Link>}
