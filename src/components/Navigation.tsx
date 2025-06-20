@@ -18,23 +18,50 @@ const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState("");
+  const [isAgent, setIsAgent] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
     // Check if user is logged in by checking localStorage
     const loggedInUser = localStorage.getItem('currentUser');
+    const currentAgent = localStorage.getItem('currentAgent');
+    const adminStatus = localStorage.getItem('isAdmin');
+    
     if (loggedInUser) {
       setIsLoggedIn(true);
       const userData = JSON.parse(loggedInUser);
       setUserEmail(userData.email);
+      setIsAgent(false);
+      setIsAdmin(false);
+    } else if (currentAgent) {
+      setIsLoggedIn(true);
+      const agentData = JSON.parse(currentAgent);
+      setUserEmail(agentData.email || agentData.username);
+      setIsAgent(true);
+      setIsAdmin(false);
+    } else if (adminStatus === 'true') {
+      setIsLoggedIn(true);
+      setUserEmail("Admin");
+      setIsAgent(false);
+      setIsAdmin(true);
+    } else {
+      setIsLoggedIn(false);
+      setUserEmail("");
+      setIsAgent(false);
+      setIsAdmin(false);
     }
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('currentUser');
+    localStorage.removeItem('currentAgent');
+    localStorage.removeItem('isAdmin');
     setIsLoggedIn(false);
     setUserEmail("");
+    setIsAgent(false);
+    setIsAdmin(false);
     navigate('/');
   };
 
@@ -46,7 +73,7 @@ const Navigation = () => {
   ];
 
   // Only show Account if user is logged in
-  if (isLoggedIn) {
+  if (isLoggedIn && !isAgent && !isAdmin) {
     navItems.push({ name: "Account", path: "/account", icon: User });
   }
 
@@ -97,20 +124,22 @@ const Navigation = () => {
             
             {!isLoggedIn ? (
               <>
-                <Link to="/login">
+                <Link to="/auth">
                   <Button variant="outline" className="border-lemon text-lemon hover:bg-lemon hover:text-black">
                     Login
                   </Button>
                 </Link>
-                <Link to="/signup">
+                <Link to="/sell">
                   <Button className="bg-lemon hover:bg-lemon-dark text-black">
-                    Sign Up
+                    Sell Your Device
                   </Button>
                 </Link>
               </>
             ) : (
               <div className="flex items-center space-x-4">
-                <span className="text-gray-300 text-sm">{userEmail}</span>
+                <span className="text-gray-300 text-sm">
+                  {isAgent ? "Agent: " : isAdmin ? "Admin: " : ""}{userEmail}
+                </span>
                 <Button 
                   onClick={handleLogout}
                   variant="outline" 
@@ -165,20 +194,22 @@ const Navigation = () => {
                 
                 {!isLoggedIn ? (
                   <>
-                    <Link to="/login" onClick={() => setIsMenuOpen(false)}>
+                    <Link to="/auth" onClick={() => setIsMenuOpen(false)}>
                       <Button variant="outline" className="w-full border-lemon text-lemon hover:bg-lemon hover:text-black">
                         Login
                       </Button>
                     </Link>
-                    <Link to="/signup" onClick={() => setIsMenuOpen(false)}>
+                    <Link to="/sell" onClick={() => setIsMenuOpen(false)}>
                       <Button className="w-full bg-lemon hover:bg-lemon-dark text-black">
-                        Sign Up
+                        Sell Your Device
                       </Button>
                     </Link>
                   </>
                 ) : (
                   <div className="space-y-2">
-                    <p className="text-gray-300 text-sm px-3">{userEmail}</p>
+                    <p className="text-gray-300 text-sm px-3">
+                      {isAgent ? "Agent: " : isAdmin ? "Admin: " : ""}{userEmail}
+                    </p>
                     <Button 
                       onClick={() => {
                         handleLogout();

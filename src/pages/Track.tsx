@@ -1,17 +1,27 @@
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Search, Package, CheckCircle, Clock, User, CreditCard, MapPin, DollarSign } from "lucide-react";
+import { Search, Package, CheckCircle, Clock, User, CreditCard, MapPin, DollarSign, LogIn } from "lucide-react";
+import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 
 const Track = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResult, setSearchResult] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // Check if user is logged in
+    const currentUser = localStorage.getItem('currentUser');
+    const currentAgent = localStorage.getItem('currentAgent');
+    const isAdmin = localStorage.getItem('isAdmin');
+    
+    setIsLoggedIn(!!(currentUser || currentAgent || isAdmin));
+  }, []);
 
   const handleSearch = () => {
     if (!searchTerm.trim()) return;
@@ -24,7 +34,7 @@ const Track = () => {
       const found = transactions.find((t: any) => t.transactionNumber === searchTerm.trim());
       
       if (found) {
-        // Use the actual stored transaction
+        // Use the actual stored transaction with real offer amount
         setSearchResult(found);
       } else {
         // Mock data for demonstration with updated status
@@ -133,6 +143,33 @@ const Track = () => {
       minute: '2-digit'
     });
   };
+
+  if (!isLoggedIn) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800">
+        <Navigation />
+        
+        <div className="py-16 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-2xl mx-auto">
+            <Card className="bg-gray-800/50 backdrop-blur-sm border-gray-700">
+              <CardContent className="text-center py-12">
+                <LogIn className="h-16 w-16 text-lemon mx-auto mb-4" />
+                <h2 className="text-2xl font-bold text-white mb-4">Login Required</h2>
+                <p className="text-gray-300 mb-6">
+                  You need to be logged in to track your transactions.
+                </p>
+                <Link to="/auth">
+                  <Button className="bg-lemon hover:bg-lemon-dark text-black font-semibold">
+                    Login to Track Orders
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800">
@@ -280,10 +317,10 @@ const Track = () => {
                           Please check your email for details and respond to accept or decline the offer.
                         </p>
                         <div className="flex gap-3 mt-3">
-                          <Button className="bg-green-600 hover:bg-green-700 text-white">
+                          <Button className="bg-green-600 hover:bg-green-700 text-black">
                             Accept Offer
                           </Button>
-                          <Button variant="outline" className="border-red-600 text-red-400 hover:bg-red-600 hover:text-white">
+                          <Button variant="outline" className="border-red-600 text-red-400 hover:bg-red-600 hover:text-black">
                             Decline Offer
                           </Button>
                         </div>
