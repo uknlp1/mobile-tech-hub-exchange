@@ -1,9 +1,8 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { MessageCircle, X, Send } from "lucide-react";
+import { MessageCircle, X, Send, Phone, MessageSquare } from "lucide-react";
 
 interface Message {
   id: string;
@@ -127,35 +126,69 @@ const Chatbot = () => {
   if (!isOpen) {
     return (
       <div className="fixed bottom-6 right-6 z-50">
-        <Button
-          onClick={() => setIsOpen(true)}
-          className="bg-lemon hover:bg-lemon-dark text-black rounded-full w-16 h-16 flex items-center justify-center shadow-lg animate-pulse"
-        >
-          <MessageCircle className="h-8 w-8" />
-        </Button>
+        <div className="relative">
+          {/* Chat Preview Card */}
+          <div className="mb-4 bg-white rounded-2xl shadow-xl border border-orange-200 p-4 w-64">
+            <div className="flex items-center space-x-3">
+              <div className="relative">
+                <img 
+                  src="/lovable-uploads/035b95d1-aec7-425d-841a-b471202969a3.png" 
+                  alt="Support Agent" 
+                  className="w-12 h-12 rounded-full object-cover"
+                />
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+              </div>
+              <div className="flex-1">
+                <p className="text-gray-800 font-medium text-sm">We're online!</p>
+              </div>
+            </div>
+            
+            <div className="mt-4 flex space-x-2">
+              <Button
+                onClick={() => setIsOpen(true)}
+                className="flex-1 bg-green-500 hover:bg-green-600 text-white text-xs py-2 px-3 rounded-lg flex items-center justify-center space-x-1"
+              >
+                <Phone className="w-3 h-3" />
+                <span>Talk Now</span>
+              </Button>
+              <Button
+                onClick={() => setIsOpen(true)}
+                className="flex-1 bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 text-xs py-2 px-3 rounded-lg flex items-center justify-center space-x-1"
+              >
+                <MessageSquare className="w-3 h-3" />
+                <span>Chat Us</span>
+              </Button>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
-      <Card className="w-80 h-[500px] bg-white shadow-2xl border-2 border-lemon/20">
-        <CardHeader className="bg-gradient-to-r from-lemon to-lemon-dark p-4 rounded-t-lg">
+      <Card className="w-80 h-[500px] bg-white shadow-2xl border border-orange-200 rounded-2xl">
+        <CardHeader className="bg-gradient-to-r from-orange-400 to-orange-500 p-4 rounded-t-2xl">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
-                <MessageCircle className="h-6 w-6 text-lemon" />
+              <div className="relative">
+                <img 
+                  src="/lovable-uploads/035b95d1-aec7-425d-841a-b471202969a3.png" 
+                  alt="Support Agent" 
+                  className="w-10 h-10 rounded-full object-cover"
+                />
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
               </div>
               <div>
-                <h3 className="font-bold text-black">Quickbot</h3>
-                <p className="text-sm text-gray-700">We're online!</p>
+                <h3 className="font-bold text-white">Quickbot</h3>
+                <p className="text-sm text-orange-100">We're online!</p>
               </div>
             </div>
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setIsOpen(false)}
-              className="text-black hover:bg-white/20 p-1"
+              className="text-white hover:bg-white/20 p-1"
             >
               <X className="h-4 w-4" />
             </Button>
@@ -180,7 +213,7 @@ const Chatbot = () => {
                 <div
                   className={`max-w-[80%] p-3 rounded-lg text-sm ${
                     message.isUser
-                      ? 'bg-lemon text-black'
+                      ? 'bg-orange-500 text-white'
                       : 'bg-gray-100 text-gray-800'
                   }`}
                 >
@@ -216,7 +249,7 @@ const Chatbot = () => {
               />
               <Button
                 onClick={handleSendMessage}
-                className="bg-lemon hover:bg-lemon-dark text-black px-3"
+                className="bg-orange-500 hover:bg-orange-600 text-white px-3"
                 disabled={!inputValue.trim() || isTyping}
               >
                 <Send className="h-4 w-4" />
