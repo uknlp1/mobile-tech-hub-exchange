@@ -1,13 +1,26 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, CarouselApi } from "@/components/ui/carousel";
 import { Smartphone, DollarSign, Wrench, Shield, Award, Users, Laptop, Headphones } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { useEffect, useState } from "react";
 
 const Index = () => {
+  const [api, setApi] = useState<CarouselApi>();
+
+  // Auto-slide functionality
+  useEffect(() => {
+    if (!api) return;
+
+    const interval = setInterval(() => {
+      api.scrollNext();
+    }, 4000); // 4 seconds
+
+    return () => clearInterval(interval);
+  }, [api]);
+
   const heroSlides = [
     {
       icon: Smartphone,
@@ -42,7 +55,7 @@ const Index = () => {
       {/* Hero Carousel Section */}
       <section className="relative py-20 px-4 sm:px-6 lg:px-8 flex-1">
         <div className="max-w-7xl mx-auto">
-          <Carousel className="w-full">
+          <Carousel className="w-full" setApi={setApi}>
             <CarouselContent>
               {heroSlides.map((slide, index) => {
                 const Icon = slide.icon;
