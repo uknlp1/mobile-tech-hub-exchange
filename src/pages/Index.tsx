@@ -30,7 +30,7 @@ const Index = () => {
                 </Button>
               </Link>
               <Link to="/sell">
-                <Button size="lg" variant="outline" className="border-lemon text-lemon hover:bg-lemon hover:text-black px-8 py-4 text-lg">
+                <Button size="lg" variant="outline" className="border-lemon hover:bg-lemon px-8 py-4 text-lg text-slate-950">
                   Sell Your Device
                 </Button>
               </Link>
