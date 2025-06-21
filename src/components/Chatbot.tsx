@@ -136,7 +136,7 @@ const Chatbot = () => {
   }
   return <div className="fixed bottom-6 right-6 z-50">
       <Card className="w-80 h-[500px] bg-white shadow-2xl border border-orange-200 rounded-2xl">
-        <CardHeader className="bg-gradient-to-r from-orange-400 to-orange-500 p-4 rounded-t-2xl">
+        <CardHeader className="from-orange-400 to-orange-500 p-4 rounded-t-2xl bg-[ffea00] bg-[#ffea00]">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="relative">
