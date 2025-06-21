@@ -144,8 +144,8 @@ const Chatbot = () => {
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
               </div>
               <div>
-                <h3 className="font-bold text-white">Quickbot</h3>
-                <p className="text-sm text-orange-100">We're online!</p>
+                <h3 className="font-bold text-zinc-950">Quickbot</h3>
+                <p className="text-sm text-green-500">We're online!</p>
               </div>
             </div>
             <Button variant="ghost" size="sm" onClick={() => setIsOpen(false)} className="text-white hover:bg-white/20 p-1">
