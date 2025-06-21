@@ -1,14 +1,11 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Smartphone, DollarSign, Wrench, Shield, Award, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-
 const Index = () => {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 flex flex-col">
+  return <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 flex flex-col">
       <Navigation />
       
       {/* Hero Section */}
@@ -135,10 +132,10 @@ const Index = () => {
         <div className="max-w-4xl mx-auto text-center">
           <Card className="bg-gradient-to-r from-lemon/10 to-lemon/5 border-lemon/20 backdrop-blur-sm">
             <CardContent className="p-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 font-poppins">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 font-poppins text-slate-950">
                 Ready to Get Started?
               </h2>
-              <p className="text-xl text-gray-300 mb-8 font-inter">
+              <p className="text-xl mb-8 font-inter text-gray-800">
                 Whether you're buying or selling, we make it simple and secure
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -148,7 +145,7 @@ const Index = () => {
                   </Button>
                 </Link>
                 <Link to="/sell">
-                  <Button size="lg" variant="outline" className="border-lemon text-lemon hover:bg-lemon hover:text-black">
+                  <Button size="lg" variant="outline" className="border-lemon hover:bg-lemon text-slate-950">
                     Sell Now
                   </Button>
                 </Link>
@@ -159,8 +156,6 @@ const Index = () => {
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
