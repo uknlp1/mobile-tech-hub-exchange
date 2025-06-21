@@ -1,8 +1,9 @@
+
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Smartphone, Menu, X, ShoppingCart, DollarSign, Wrench, FileText, User, LogOut, Home, Info, Mail } from "lucide-react";
+import { Smartphone, Menu, X, ShoppingCart, DollarSign, Wrench, FileText, User, LogOut, Info, Mail } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 
 const Navigation = () => {
@@ -47,6 +48,7 @@ const Navigation = () => {
       setIsAdmin(false);
     }
   }, []);
+
   const handleLogout = () => {
     // Check if user is logged in by checking localStorage
     localStorage.removeItem('currentUser');
@@ -58,12 +60,8 @@ const Navigation = () => {
     setIsAdmin(false);
     navigate('/');
   };
+
   const navItems = [
-    {
-      name: "Home",
-      path: "/",
-      icon: Home
-    },
     {
       name: "About",
       path: "/about",
@@ -85,7 +83,7 @@ const Navigation = () => {
       icon: Wrench
     },
     {
-      name: "Track Orders",
+      name: "Track",
       path: "/track",
       icon: FileText
     },
@@ -104,7 +102,13 @@ const Navigation = () => {
       icon: User
     });
   }
+
   const isActive = (path: string) => location.pathname === path;
+
+  if (isDashboardPage) {
+    return null;
+  }
+
   return (
     <header className="bg-black/90 backdrop-blur-sm shadow-lg border-b border-lemon/20 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -118,7 +122,7 @@ const Navigation = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-6">
+          <nav className="hidden md:flex space-x-4">
             {navItems.map(item => {
               const Icon = item.icon;
               return (
