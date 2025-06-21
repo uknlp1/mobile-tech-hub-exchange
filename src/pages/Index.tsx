@@ -1,41 +1,86 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Smartphone, DollarSign, Wrench, Shield, Award, Users } from "lucide-react";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { Smartphone, DollarSign, Wrench, Shield, Award, Users, Laptop, Headphones } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+
 const Index = () => {
-  return <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 flex flex-col">
+  const heroSlides = [
+    {
+      icon: Smartphone,
+      title: "Buy & Sell",
+      subtitle: "Smart Devices",
+      description: "Your trusted marketplace for quality pre-owned smartphones and laptops. Get the best deals with warranty protection.",
+      primaryButton: { text: "Start Shopping", link: "/buy" },
+      secondaryButton: { text: "Sell Your Device", link: "/sell" }
+    },
+    {
+      icon: Laptop,
+      title: "Premium",
+      subtitle: "Laptops & Computers",
+      description: "Discover high-performance laptops and computers at unbeatable prices. All devices certified and ready to power your productivity.",
+      primaryButton: { text: "Browse Laptops", link: "/buy" },
+      secondaryButton: { text: "Trade In Now", link: "/sell" }
+    },
+    {
+      icon: Headphones,
+      title: "Audio & Tech",
+      subtitle: "Accessories",
+      description: "Complete your tech setup with premium accessories. From headphones to chargers, find everything you need in one place.",
+      primaryButton: { text: "Shop Accessories", link: "/buy" },
+      secondaryButton: { text: "Sell Accessories", link: "/sell" }
+    }
+  ];
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 flex flex-col">
       <Navigation />
       
-      {/* Hero Section */}
+      {/* Hero Carousel Section */}
       <section className="relative py-20 px-4 sm:px-6 lg:px-8 flex-1">
-        <div className="max-w-7xl mx-auto text-center">
-          <div className="mb-12">
-            <div className="inline-flex items-center justify-center p-3 bg-lemon/10 rounded-full mb-6">
-              <Smartphone className="h-12 w-12 text-lemon" />
-            </div>
-            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 font-poppins">
-              Buy & Sell
-              <span className="block text-lemon">Smart Devices</span>
-            </h1>
-            <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto font-inter">
-              Your trusted marketplace for quality pre-owned smartphones and laptops. 
-              Get the best deals with warranty protection.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/buy">
-                <Button size="lg" className="bg-lemon hover:bg-lemon-dark text-black font-semibold px-8 py-4 text-lg">
-                  Start Shopping
-                </Button>
-              </Link>
-              <Link to="/sell">
-                <Button size="lg" variant="outline" className="border-lemon hover:bg-lemon px-8 py-4 text-lg text-slate-950">
-                  Sell Your Device
-                </Button>
-              </Link>
-            </div>
-          </div>
+        <div className="max-w-7xl mx-auto">
+          <Carousel className="w-full">
+            <CarouselContent>
+              {heroSlides.map((slide, index) => {
+                const Icon = slide.icon;
+                return (
+                  <CarouselItem key={index}>
+                    <div className="text-center">
+                      <div className="mb-12">
+                        <div className="inline-flex items-center justify-center p-3 bg-lemon/10 rounded-full mb-6">
+                          <Icon className="h-12 w-12 text-lemon" />
+                        </div>
+                        <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 font-poppins">
+                          {slide.title}
+                          <span className="block text-lemon">{slide.subtitle}</span>
+                        </h1>
+                        <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto font-inter">
+                          {slide.description}
+                        </p>
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                          <Link to={slide.primaryButton.link}>
+                            <Button size="lg" className="bg-lemon hover:bg-lemon-dark text-black font-semibold px-8 py-4 text-lg">
+                              {slide.primaryButton.text}
+                            </Button>
+                          </Link>
+                          <Link to={slide.secondaryButton.link}>
+                            <Button size="lg" variant="outline" className="border-lemon hover:bg-lemon px-8 py-4 text-lg text-slate-950">
+                              {slide.secondaryButton.text}
+                            </Button>
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  </CarouselItem>
+                );
+              })}
+            </CarouselContent>
+            <CarouselPrevious className="left-4" />
+            <CarouselNext className="right-4" />
+          </Carousel>
         </div>
       </section>
 
@@ -156,6 +201,8 @@ const Index = () => {
       </section>
 
       <Footer />
-    </div>;
+    </div>
+  );
 };
+
 export default Index;
