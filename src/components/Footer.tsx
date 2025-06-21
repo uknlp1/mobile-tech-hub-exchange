@@ -1,10 +1,7 @@
-
 import { Link } from "react-router-dom";
 import { Smartphone, Mail, Phone, MapPin } from "lucide-react";
-
 const Footer = () => {
-  return (
-    <footer className="bg-black/90 backdrop-blur-sm border-t border-lemon/20 mt-auto">
+  return <footer className="bg-black/90 backdrop-blur-sm border-t border-lemon/20 mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
@@ -90,13 +87,9 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-gray-700 mt-8 pt-8 text-center">
-          <p className="text-gray-400 text-sm">
-            © 2024 Quickbuy. All rights reserved.
-          </p>
+          <p className="text-gray-400 text-sm">© 2025 Quickbuy. All rights reserved.</p>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;
