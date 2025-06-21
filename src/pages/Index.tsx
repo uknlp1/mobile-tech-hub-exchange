@@ -1,248 +1,166 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Smartphone, Laptop, Wrench, ShoppingCart, DollarSign, Shield, Clock, Star, Quote } from "lucide-react";
+import { Smartphone, DollarSign, Wrench, Shield, Award, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
+
 const Index = () => {
-  const testimonials = [{
-    name: "Sarah Johnson",
-    role: "Customer",
-    content: "Sold my iPhone 13 through QuickBuy and got an amazing price! The process was quick and transparent. Highly recommended!",
-    rating: 5,
-    image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face"
-  }, {
-    name: "Michael Chen",
-    role: "Customer",
-    content: "Bought a refurbished MacBook Pro and it's in perfect condition. Great warranty and excellent customer service!",
-    rating: 5,
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face"
-  }, {
-    name: "Priya Patel",
-    role: "Customer",
-    content: "Their repair service is fantastic! Fixed my Samsung Galaxy screen in just 2 hours. Professional and affordable.",
-    rating: 5,
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face"
-  }, {
-    name: "David Williams",
-    role: "Customer",
-    content: "I've been buying and selling devices with QuickBuy for over a year. Trustworthy platform with fair prices.",
-    rating: 5,
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
-  }, {
-    name: "Lisa Thompson",
-    role: "Customer",
-    content: "Amazing experience! They handled my laptop repair with care and kept me updated throughout the process.",
-    rating: 5,
-    image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face"
-  }, {
-    name: "James Robertson",
-    role: "Customer",
-    content: "Quick cash for my old devices and excellent customer support. QuickBuy makes selling electronics hassle-free!",
-    rating: 5,
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face"
-  }];
-  return <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800">
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 flex flex-col">
       <Navigation />
-
+      
       {/* Hero Section */}
-      <section className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8">
+      <section className="relative py-20 px-4 sm:px-6 lg:px-8 flex-1">
         <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 font-poppins">
-            Your Trusted
-            <span className="text-lemon block mt-2">Tech Marketplace</span>
-          </h1>
-          <p className="text-lg sm:text-xl text-gray-300 mb-8 sm:mb-12 max-w-3xl mx-auto font-inter leading-relaxed">
-            Buy, sell, and repair phones and laptops with confidence. 
-            Get the best deals on premium devices and professional repair services.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center">
-            <Link to="/buy" className="w-full sm:w-auto">
-              <Button size="lg" className="w-full sm:w-auto bg-lemon hover:bg-lemon-dark text-black font-semibold px-8 py-4 text-lg transition-all duration-300 transform hover:scale-105">
-                <ShoppingCart className="mr-2 h-5 w-5" />
-                Start Shopping
-              </Button>
-            </Link>
-            <Link to="/sell" className="w-full sm:w-auto">
-              <Button size="lg" variant="outline" className="w-full sm:w-auto border-lemon hover:bg-lemon font-semibold px-8 py-4 text-lg transition-all duration-300 transform hover:scale-105 text-zinc-950">
-                <DollarSign className="mr-2 h-5 w-5" />
-                Sell Your Device
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Services Section */}
-      <section className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center text-white mb-12 sm:mb-16 font-poppins">Our Services</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-            <Card className="bg-gray-800/50 backdrop-blur-sm border-gray-700 hover:border-lemon/50 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
-              <CardHeader className="text-center pb-4">
-                <div className="mx-auto mb-4 p-4 bg-lemon/20 rounded-full w-fit">
-                  <ShoppingCart className="h-8 w-8 text-lemon" />
-                </div>
-                <CardTitle className="text-xl sm:text-2xl font-semibold text-white font-poppins">Buy Devices</CardTitle>
-                <CardDescription className="text-gray-300 font-inter">
-                  Browse our wide selection of certified pre-owned phones and laptops
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <ul className="space-y-3 text-sm text-gray-400 font-inter">
-                  <li className="flex items-center"><span className="text-lemon mr-2">•</span> Quality guaranteed devices</li>
-                  <li className="flex items-center"><span className="text-lemon mr-2">•</span> Competitive pricing</li>
-                  <li className="flex items-center"><span className="text-lemon mr-2">•</span> 30-day return policy</li>
-                  <li className="flex items-center"><span className="text-lemon mr-2">•</span> Free shipping available</li>
-                </ul>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gray-800/50 backdrop-blur-sm border-gray-700 hover:border-lemon/50 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
-              <CardHeader className="text-center pb-4">
-                <div className="mx-auto mb-4 p-4 bg-lemon/20 rounded-full w-fit">
-                  <DollarSign className="h-8 w-8 text-lemon" />
-                </div>
-                <CardTitle className="text-xl sm:text-2xl font-semibold text-white font-poppins">Sell Devices</CardTitle>
-                <CardDescription className="text-gray-300 font-inter">
-                  Get instant quotes and sell your devices quickly and securely
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <ul className="space-y-3 text-sm text-gray-400 font-inter">
-                  <li className="flex items-center"><span className="text-lemon mr-2">•</span> Instant price quotes</li>
-                  <li className="flex items-center"><span className="text-lemon mr-2">•</span> Fast payment processing</li>
-                  <li className="flex items-center"><span className="text-lemon mr-2">•</span> Free shipping labels</li>
-                  <li className="flex items-center"><span className="text-lemon mr-2">•</span> Secure data wiping</li>
-                </ul>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gray-800/50 backdrop-blur-sm border-gray-700 hover:border-lemon/50 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
-              <CardHeader className="text-center pb-4">
-                <div className="mx-auto mb-4 p-4 bg-lemon/20 rounded-full w-fit">
-                  <Wrench className="h-8 w-8 text-lemon" />
-                </div>
-                <CardTitle className="text-xl sm:text-2xl font-semibold text-white font-poppins">Repair Services</CardTitle>
-                <CardDescription className="text-gray-300 font-inter">
-                  Professional repair services for all major phone and laptop brands
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <ul className="space-y-3 text-sm text-gray-400 font-inter">
-                  <li className="flex items-center"><span className="text-lemon mr-2">•</span> Expert technicians</li>
-                  <li className="flex items-center"><span className="text-lemon mr-2">•</span> Genuine parts only</li>
-                  <li className="flex items-center"><span className="text-lemon mr-2">•</span> Quick turnaround</li>
-                  <li className="flex items-center"><span className="text-lemon mr-2">•</span> Warranty included</li>
-                </ul>
-              </CardContent>
-            </Card>
+          <div className="mb-12">
+            <div className="inline-flex items-center justify-center p-3 bg-lemon/10 rounded-full mb-6">
+              <Smartphone className="h-12 w-12 text-lemon" />
+            </div>
+            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 font-poppins">
+              Buy & Sell
+              <span className="block text-lemon">Smart Devices</span>
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto font-inter">
+              Your trusted marketplace for quality pre-owned smartphones and laptops. 
+              Get the best deals with warranty protection.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to="/buy">
+                <Button size="lg" className="bg-lemon hover:bg-lemon-dark text-black font-semibold px-8 py-4 text-lg">
+                  Start Shopping
+                </Button>
+              </Link>
+              <Link to="/sell">
+                <Button size="lg" variant="outline" className="border-lemon text-lemon hover:bg-lemon hover:text-black px-8 py-4 text-lg">
+                  Sell Your Device
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-black/30">
+      <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-12">
-            <div className="text-center">
-              <div className="mx-auto mb-4 p-4 bg-lemon/20 rounded-full w-fit">
-                <Shield className="h-10 w-10 text-lemon" />
-              </div>
-              <h3 className="text-xl sm:text-2xl font-semibold text-white mb-2 font-poppins">Secure Transactions</h3>
-              <p className="text-gray-400 font-inter">All transactions are encrypted and protected with industry-standard security.</p>
-            </div>
-            <div className="text-center">
-              <div className="mx-auto mb-4 p-4 bg-lemon/20 rounded-full w-fit">
-                <Clock className="h-10 w-10 text-lemon" />
-              </div>
-              <h3 className="text-xl sm:text-2xl font-semibold text-white mb-2 font-poppins">Fast Processing</h3>
-              <p className="text-gray-400 font-inter">Quick quotes, fast repairs, and same-day shipping available.</p>
-            </div>
-            <div className="text-center">
-              <div className="mx-auto mb-4 p-4 bg-lemon/20 rounded-full w-fit">
-                <Star className="h-10 w-10 text-lemon" />
-              </div>
-              <h3 className="text-xl sm:text-2xl font-semibold text-white mb-2 font-poppins">5-Star Service</h3>
-              <p className="text-gray-400 font-inter">Rated by thousands of satisfied customers across South Africa.</p>
-            </div>
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 font-poppins">
+              Why Choose Quickbuy?
+            </h2>
+            <p className="text-xl text-gray-300 font-inter">
+              Experience the difference with our premium service
+            </p>
           </div>
-        </div>
-      </section>
-
-      {/* Testimonials Section */}
-      <section className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center text-white mb-12 sm:mb-16 font-poppins">What Our Customers Say</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {testimonials.map((testimonial, index) => <Card key={index} className="bg-gray-800/50 backdrop-blur-sm border-gray-700 hover:border-lemon/30 transition-all duration-300">
-                <CardHeader className="pb-4">
-                  <div className="flex items-center gap-4">
-                    <img src={testimonial.image} alt={testimonial.name} className="w-12 h-12 rounded-full object-cover" />
-                    <div>
-                      <h4 className="text-white font-semibold font-poppins">{testimonial.name}</h4>
-                      <p className="text-gray-400 text-sm">{testimonial.role}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    {Array.from({
-                  length: testimonial.rating
-                }).map((_, i) => <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />)}
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <div className="relative">
-                    <Quote className="h-8 w-8 text-lemon/30 absolute -top-2 -left-2" />
-                    <p className="text-gray-300 font-inter italic pl-6">"{testimonial.content}"</p>
-                  </div>
-                </CardContent>
-              </Card>)}
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-black text-white py-12 sm:py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-            <div className="sm:col-span-2 md:col-span-1">
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="p-2 bg-lemon rounded-lg">
-                  <Smartphone className="h-5 w-5 text-black" />
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <Card className="bg-gray-800/50 backdrop-blur-sm border-gray-700 hover:border-lemon/50 transition-all duration-300">
+              <CardHeader>
+                <div className="p-3 bg-lemon/10 rounded-lg w-fit mb-4">
+                  <Shield className="h-8 w-8 text-lemon" />
                 </div>
-                <span className="text-xl font-bold font-poppins">QuickBuy</span>
-              </div>
-              <p className="text-gray-400 font-inter">Your trusted partner for all things tech.</p>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-4 font-poppins">Services</h3>
-              <ul className="space-y-2 text-gray-400 font-inter">
-                <li><Link to="/buy" className="hover:text-lemon transition-colors">Buy Devices</Link></li>
-                <li><Link to="/sell" className="hover:text-lemon transition-colors">Sell Devices</Link></li>
-                <li><Link to="/repairs" className="hover:text-lemon transition-colors">Repairs</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-4 font-poppins">Support</h3>
-              <ul className="space-y-2 text-gray-400 font-inter">
-                <li><Link to="/contact" className="hover:text-lemon transition-colors">Contact Us</Link></li>
-                <li><a href="#" className="hover:text-lemon transition-colors">FAQ</a></li>
-                <li><a href="#" className="hover:text-lemon transition-colors">Warranty</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-4 font-poppins">Company</h3>
-              <ul className="space-y-2 text-gray-400 font-inter">
-                <li><a href="#" className="hover:text-lemon transition-colors">About Us</a></li>
-                <li><a href="#" className="hover:text-lemon transition-colors">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-lemon transition-colors">Terms of Service</a></li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400 font-inter">
-            <p className="text-slate-50">© 2025 QuickBuy. All rights reserved. Designed by w.ojinmah@gmail.com</p>
+                <CardTitle className="text-white font-poppins">Quality Guaranteed</CardTitle>
+                <CardDescription className="text-gray-300">
+                  Every device undergoes rigorous testing and comes with warranty protection
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="bg-gray-800/50 backdrop-blur-sm border-gray-700 hover:border-lemon/50 transition-all duration-300">
+              <CardHeader>
+                <div className="p-3 bg-lemon/10 rounded-lg w-fit mb-4">
+                  <DollarSign className="h-8 w-8 text-lemon" />
+                </div>
+                <CardTitle className="text-white font-poppins">Best Prices</CardTitle>
+                <CardDescription className="text-gray-300">
+                  Competitive pricing and fair valuations for both buyers and sellers
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="bg-gray-800/50 backdrop-blur-sm border-gray-700 hover:border-lemon/50 transition-all duration-300">
+              <CardHeader>
+                <div className="p-3 bg-lemon/10 rounded-lg w-fit mb-4">
+                  <Wrench className="h-8 w-8 text-lemon" />
+                </div>
+                <CardTitle className="text-white font-poppins">Repair Services</CardTitle>
+                <CardDescription className="text-gray-300">
+                  Professional repair services to keep your devices running smoothly
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="bg-gray-800/50 backdrop-blur-sm border-gray-700 hover:border-lemon/50 transition-all duration-300">
+              <CardHeader>
+                <div className="p-3 bg-lemon/10 rounded-lg w-fit mb-4">
+                  <Award className="h-8 w-8 text-lemon" />
+                </div>
+                <CardTitle className="text-white font-poppins">Certified Pre-owned</CardTitle>
+                <CardDescription className="text-gray-300">
+                  All devices are thoroughly inspected and certified by our experts
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="bg-gray-800/50 backdrop-blur-sm border-gray-700 hover:border-lemon/50 transition-all duration-300">
+              <CardHeader>
+                <div className="p-3 bg-lemon/10 rounded-lg w-fit mb-4">
+                  <Users className="h-8 w-8 text-lemon" />
+                </div>
+                <CardTitle className="text-white font-poppins">Trusted Community</CardTitle>
+                <CardDescription className="text-gray-300">
+                  Join thousands of satisfied customers across South Africa
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="bg-gray-800/50 backdrop-blur-sm border-gray-700 hover:border-lemon/50 transition-all duration-300">
+              <CardHeader>
+                <div className="p-3 bg-lemon/10 rounded-lg w-fit mb-4">
+                  <Smartphone className="h-8 w-8 text-lemon" />
+                </div>
+                <CardTitle className="text-white font-poppins">Easy Process</CardTitle>
+                <CardDescription className="text-gray-300">
+                  Simple online process from evaluation to payment in just a few steps
+                </CardDescription>
+              </CardHeader>
+            </Card>
           </div>
         </div>
-      </footer>
-    </div>;
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto text-center">
+          <Card className="bg-gradient-to-r from-lemon/10 to-lemon/5 border-lemon/20 backdrop-blur-sm">
+            <CardContent className="p-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 font-poppins">
+                Ready to Get Started?
+              </h2>
+              <p className="text-xl text-gray-300 mb-8 font-inter">
+                Whether you're buying or selling, we make it simple and secure
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link to="/buy">
+                  <Button size="lg" className="bg-lemon hover:bg-lemon-dark text-black font-semibold">
+                    Browse Devices
+                  </Button>
+                </Link>
+                <Link to="/sell">
+                  <Button size="lg" variant="outline" className="border-lemon text-lemon hover:bg-lemon hover:text-black">
+                    Sell Now
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      <Footer />
+    </div>
+  );
 };
+
 export default Index;
