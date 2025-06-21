@@ -109,7 +109,7 @@ const Chatbot = () => {
     return <div className="fixed bottom-6 right-6 z-50">
         <div className="relative">
           {/* Chat Preview Card */}
-          <div className="mb-4 bg-white rounded-2xl shadow-xl border border-orange-200 p-4 w-64">
+          <div className="mb-4 rounded-2xl shadow-xl border border-orange-200 p-4 w-64 bg-[ffea00] bg-[#ffea00]">
             <div className="flex items-center space-x-3">
               <div className="relative">
                 <img src="/lovable-uploads/035b95d1-aec7-425d-841a-b471202969a3.png" alt="Support Agent" className="w-12 h-12 rounded-full object-cover" />
@@ -121,7 +121,7 @@ const Chatbot = () => {
             </div>
             
             <div className="mt-4 flex space-x-2">
-              <Button onClick={() => setIsOpen(true)} className="flex-1 text-xs py-2 px-3 rounded-lg flex items-center justify-center space-x-1 bg-[#ffea00] text-slate-950">
+              <Button onClick={() => setIsOpen(true)} className="flex-1 text-xs py-2 px-3 rounded-lg flex items-center justify-center space-x-1 text-slate-50 bg-slate-950 hover:bg-slate-800">
                 <Phone className="w-3 h-3" />
                 <span>Talk Now</span>
               </Button>
