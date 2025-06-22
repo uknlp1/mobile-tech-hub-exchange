@@ -6,101 +6,104 @@ import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { useEffect, useState } from "react";
-
 const Index = () => {
   const [api, setApi] = useState<CarouselApi>();
 
   // Auto-slide functionality
   useEffect(() => {
     if (!api) return;
-
     const interval = setInterval(() => {
       api.scrollNext();
     }, 4000); // 4 seconds
 
     return () => clearInterval(interval);
   }, [api]);
-
-  const heroSlides = [
-    {
-      icon: Smartphone,
-      title: "Buy & Sell",
-      subtitle: "Smart Devices",
-      description: "Your trusted marketplace for quality pre-owned smartphones and laptops. Get the best deals with warranty protection.",
-      primaryButton: { text: "Start Shopping", link: "/buy" },
-      secondaryButton: { text: "Sell Your Device", link: "/sell" }
+  const heroSlides = [{
+    icon: Smartphone,
+    title: "Buy & Sell",
+    subtitle: "Smart Devices",
+    description: "Your trusted marketplace for quality pre-owned smartphones and laptops. Get the best deals with warranty protection.",
+    primaryButton: {
+      text: "Start Shopping",
+      link: "/buy"
     },
-    {
-      icon: Laptop,
-      title: "Premium",
-      subtitle: "Laptops & Computers",
-      description: "Discover high-performance laptops and computers at unbeatable prices. All devices certified and ready to power your productivity.",
-      primaryButton: { text: "Browse Laptops", link: "/buy" },
-      secondaryButton: { text: "Trade In Now", link: "/sell" }
-    },
-    {
-      icon: Headphones,
-      title: "Audio & Tech",
-      subtitle: "Accessories",
-      description: "Complete your tech setup with premium accessories. From headphones to chargers, find everything you need in one place.",
-      primaryButton: { text: "Shop Accessories", link: "/buy" },
-      secondaryButton: { text: "Sell Accessories", link: "/sell" }
+    secondaryButton: {
+      text: "Sell Your Device",
+      link: "/sell"
     }
-  ];
-
-  const saleDevices = [
-    {
-      id: 1,
-      name: "iPhone 13 Pro Max",
-      originalPrice: 16999,
-      salePrice: 12999,
-      discount: 24,
-      image: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400&h=300&fit=crop",
-      condition: "Excellent",
-      storage: "256GB",
-      rating: 4.8,
-      timeLeft: "2 days"
+  }, {
+    icon: Laptop,
+    title: "Premium",
+    subtitle: "Laptops & Computers",
+    description: "Discover high-performance laptops and computers at unbeatable prices. All devices certified and ready to power your productivity.",
+    primaryButton: {
+      text: "Browse Laptops",
+      link: "/buy"
     },
-    {
-      id: 2,
-      name: "MacBook Air M2",
-      originalPrice: 24999,
-      salePrice: 19999,
-      discount: 20,
-      image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=400&h=300&fit=crop",
-      condition: "Like New",
-      storage: "512GB SSD",
-      rating: 4.9,
-      timeLeft: "1 day"
-    },
-    {
-      id: 3,
-      name: "Samsung Galaxy S23 Ultra",
-      originalPrice: 18999,
-      salePrice: 14999,
-      discount: 21,
-      image: "https://images.unsplash.com/photo-1567784177951-6fa58317e16b?w=400&h=300&fit=crop",
-      condition: "Excellent",
-      storage: "512GB",
-      rating: 4.7,
-      timeLeft: "3 days"
-    },
-    {
-      id: 4,
-      name: "iPad Pro 11\"",
-      originalPrice: 15999,
-      salePrice: 11999,
-      discount: 25,
-      image: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&h=300&fit=crop",
-      condition: "Good",
-      storage: "256GB",
-      rating: 4.6,
-      timeLeft: "5 hours"
+    secondaryButton: {
+      text: "Trade In Now",
+      link: "/sell"
     }
-  ];
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 flex flex-col">
+  }, {
+    icon: Headphones,
+    title: "Audio & Tech",
+    subtitle: "Accessories",
+    description: "Complete your tech setup with premium accessories. From headphones to chargers, find everything you need in one place.",
+    primaryButton: {
+      text: "Shop Accessories",
+      link: "/buy"
+    },
+    secondaryButton: {
+      text: "Sell Accessories",
+      link: "/sell"
+    }
+  }];
+  const saleDevices = [{
+    id: 1,
+    name: "iPhone 13 Pro Max",
+    originalPrice: 16999,
+    salePrice: 12999,
+    discount: 24,
+    image: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400&h=300&fit=crop",
+    condition: "Excellent",
+    storage: "256GB",
+    rating: 4.8,
+    timeLeft: "2 days"
+  }, {
+    id: 2,
+    name: "MacBook Air M2",
+    originalPrice: 24999,
+    salePrice: 19999,
+    discount: 20,
+    image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=400&h=300&fit=crop",
+    condition: "Like New",
+    storage: "512GB SSD",
+    rating: 4.9,
+    timeLeft: "1 day"
+  }, {
+    id: 3,
+    name: "Samsung Galaxy S23 Ultra",
+    originalPrice: 18999,
+    salePrice: 14999,
+    discount: 21,
+    image: "https://images.unsplash.com/photo-1567784177951-6fa58317e16b?w=400&h=300&fit=crop",
+    condition: "Excellent",
+    storage: "512GB",
+    rating: 4.7,
+    timeLeft: "3 days"
+  }, {
+    id: 4,
+    name: "iPad Pro 11\"",
+    originalPrice: 15999,
+    salePrice: 11999,
+    discount: 25,
+    image: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&h=300&fit=crop",
+    condition: "Good",
+    storage: "256GB",
+    rating: 4.6,
+    timeLeft: "5 hours"
+  }];
+  return <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 flex flex-col">
       <Navigation />
       
       {/* Hero Carousel Section */}
@@ -109,9 +112,8 @@ const Index = () => {
           <Carousel className="w-full" setApi={setApi}>
             <CarouselContent>
               {heroSlides.map((slide, index) => {
-                const Icon = slide.icon;
-                return (
-                  <CarouselItem key={index}>
+              const Icon = slide.icon;
+              return <CarouselItem key={index}>
                     <div className="text-center">
                       <div className="mb-12">
                         <div className="inline-flex items-center justify-center p-3 bg-lemon/10 rounded-full mb-6">
@@ -138,9 +140,8 @@ const Index = () => {
                         </div>
                       </div>
                     </div>
-                  </CarouselItem>
-                );
-              })}
+                  </CarouselItem>;
+            })}
             </CarouselContent>
             <CarouselPrevious className="left-4" />
             <CarouselNext className="right-4" />
@@ -161,8 +162,7 @@ const Index = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {saleDevices.map((device) => (
-              <Card key={device.id} className="bg-gray-800/50 backdrop-blur-sm border-gray-700 hover:border-lemon/50 transition-all duration-300 transform hover:scale-105 relative overflow-hidden">
+            {saleDevices.map(device => <Card key={device.id} className="bg-gray-800/50 backdrop-blur-sm border-gray-700 hover:border-lemon/50 transition-all duration-300 transform hover:scale-105 relative overflow-hidden">
                 {/* Sale Badge */}
                 <div className="absolute top-4 left-4 z-10">
                   <div className="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">
@@ -180,11 +180,7 @@ const Index = () => {
 
                 <CardHeader className="pb-3">
                   <div className="aspect-square bg-gray-700 rounded-lg mb-4 overflow-hidden">
-                    <img
-                      src={device.image}
-                      alt={device.name}
-                      className="w-full h-full object-cover"
-                    />
+                    <img src={device.image} alt={device.name} className="w-full h-full object-cover" />
                   </div>
                   <CardTitle className="text-white font-poppins text-lg">{device.name}</CardTitle>
                   <div className="flex items-center gap-2">
@@ -216,13 +212,12 @@ const Index = () => {
                     </Button>
                   </Link>
                 </CardContent>
-              </Card>
-            ))}
+              </Card>)}
           </div>
 
           <div className="text-center mt-12">
             <Link to="/buy">
-              <Button size="lg" variant="outline" className="border-lemon hover:bg-lemon text-white hover:text-black">
+              <Button size="lg" variant="outline" className="border-lemon hover:bg-lemon text-zinc-950">
                 View All Sales
               </Button>
             </Link>
@@ -347,8 +342,6 @@ const Index = () => {
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
