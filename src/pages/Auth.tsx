@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -32,7 +31,9 @@ const Auth = () => {
     apartment: "",
     city: "",
     province: "",
-    postalCode: ""
+    postalCode: "",
+    idType: "",
+    idNumber: ""
   });
 
   const southAfricanProvinces = [
@@ -45,6 +46,11 @@ const Auth = () => {
     "Northern Cape",
     "North West",
     "Western Cape"
+  ];
+
+  const idTypes = [
+    "ID Number",
+    "Passport Number"
   ];
 
   const handleLoginSubmit = (e: React.FormEvent) => {
@@ -73,7 +79,7 @@ const Auth = () => {
     
     console.log("Signup attempted with:", signupData);
     
-    // Store user session with address information
+    // Store user session with address and ID information
     localStorage.setItem('currentUser', JSON.stringify({
       email: signupData.email,
       firstName: signupData.firstName,
@@ -84,6 +90,10 @@ const Auth = () => {
         city: signupData.city,
         province: signupData.province,
         postalCode: signupData.postalCode
+      },
+      identification: {
+        type: signupData.idType,
+        number: signupData.idNumber
       }
     }));
     
@@ -110,6 +120,13 @@ const Auth = () => {
     setSignupData({
       ...signupData,
       province: value
+    });
+  };
+
+  const handleIdTypeChange = (value: string) => {
+    setSignupData({
+      ...signupData,
+      idType: value
     });
   };
 
@@ -254,6 +271,39 @@ const Auth = () => {
                       type="tel"
                       placeholder="+27 82 123 4567"
                       value={signupData.phone}
+                      onChange={handleSignupInputChange}
+                      className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400"
+                      required
+                    />
+                  </div>
+
+                  {/* ID Verification Fields */}
+                  <div>
+                    <Label htmlFor="idType" className="text-gray-300">ID Verification Type</Label>
+                    <Select onValueChange={handleIdTypeChange} required>
+                      <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                        <SelectValue placeholder="Select ID type" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-gray-700 border-gray-600">
+                        {idTypes.map((type) => (
+                          <SelectItem key={type} value={type} className="text-white hover:bg-gray-600">
+                            {type}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="idNumber" className="text-gray-300">
+                      {signupData.idType === "Passport Number" ? "Passport Number" : "ID Number"}
+                    </Label>
+                    <Input
+                      id="idNumber"
+                      name="idNumber"
+                      type="text"
+                      placeholder={signupData.idType === "Passport Number" ? "Enter passport number" : "Enter ID number"}
+                      value={signupData.idNumber}
                       onChange={handleSignupInputChange}
                       className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400"
                       required
