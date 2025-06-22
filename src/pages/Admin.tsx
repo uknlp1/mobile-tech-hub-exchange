@@ -1,11 +1,13 @@
+
 import React, { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Users, Package, BarChart3, Settings, DollarSign } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import AgentManagement from "@/components/admin/AgentManagement";
 import DeviceManagement from "@/components/admin/DeviceManagement";
 import ProfileManagement from "@/components/admin/ProfileManagement";
+import AdminOverview from "@/components/admin/AdminOverview";
+import AdminTransactions from "@/components/admin/AdminTransactions";
 import { loadTransactions, loadCustomers, loadAgents, loadDevices, saveDevices } from "@/utils/storage";
 
 const Admin = () => {
@@ -18,9 +20,6 @@ const Admin = () => {
   const [devices, setDevices] = useState(loadDevices());
   
   const totalRevenue = transactions.reduce((sum, txn) => sum + (txn.offeredAmount || 0), 0);
-  const pendingTransactions = transactions.filter(txn => 
-    txn.status === "Awaiting Confirmation" || txn.status === "Assigned to Agent"
-  ).length;
 
   // Handler functions for AgentManagement
   const handleCreateAgent = (agentData: any) => {
@@ -126,67 +125,13 @@ const Admin = () => {
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="overview" className="space-y-6">
-              {/* Overview Stats */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <Card className="bg-gray-800/50 backdrop-blur-sm border-gray-700">
-                  <CardContent className="p-6 text-center">
-                    <Users className="h-8 w-8 text-blue-500 mx-auto mb-2" />
-                    <h3 className="text-2xl font-bold text-white">{customers.length}</h3>
-                    <p className="text-gray-400">Total Customers</p>
-                  </CardContent>
-                </Card>
-                
-                <Card className="bg-gray-800/50 backdrop-blur-sm border-gray-700">
-                  <CardContent className="p-6 text-center">
-                    <Users className="h-8 w-8 text-green-500 mx-auto mb-2" />
-                    <h3 className="text-2xl font-bold text-white">{agents.length}</h3>
-                    <p className="text-gray-400">Active Agents</p>
-                  </CardContent>
-                </Card>
-                
-                <Card className="bg-gray-800/50 backdrop-blur-sm border-gray-700">
-                  <CardContent className="p-6 text-center">
-                    <Package className="h-8 w-8 text-purple-500 mx-auto mb-2" />
-                    <h3 className="text-2xl font-bold text-white">{transactions.length}</h3>
-                    <p className="text-gray-400">Total Transactions</p>
-                  </CardContent>
-                </Card>
-                
-                <Card className="bg-gray-800/50 backdrop-blur-sm border-gray-700">
-                  <CardContent className="p-6 text-center">
-                    <DollarSign className="h-8 w-8 text-lemon mx-auto mb-2" />
-                    <h3 className="text-2xl font-bold text-white">R{totalRevenue.toLocaleString()}</h3>
-                    <p className="text-gray-400">Total Revenue</p>
-                  </CardContent>
-                </Card>
-              </div>
-
-              {/* Recent Activity */}
-              <Card className="bg-gray-800/50 backdrop-blur-sm border-gray-700">
-                <CardHeader>
-                  <CardTitle className="text-white font-poppins">Recent Transactions</CardTitle>
-                  <CardDescription className="text-gray-300">
-                    Latest device submissions and assessments
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {transactions.slice(0, 5).map((transaction) => (
-                      <div key={transaction.id} className="flex items-center justify-between p-4 bg-gray-700/30 rounded-lg">
-                        <div>
-                          <p className="text-white font-medium">{transaction.transactionNumber}</p>
-                          <p className="text-gray-400 text-sm">{transaction.customerName} • {transaction.deviceInfo}</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-lemon font-bold">R{(transaction.offeredAmount || transaction.estimatedValue || 0).toLocaleString()}</p>
-                          <p className="text-gray-400 text-sm">{transaction.status}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+            <TabsContent value="overview">
+              <AdminOverview 
+                transactions={transactions}
+                customers={customers}
+                agents={agents}
+                totalRevenue={totalRevenue}
+              />
             </TabsContent>
 
             <TabsContent value="agents">
@@ -207,35 +152,8 @@ const Admin = () => {
               />
             </TabsContent>
 
-            <TabsContent value="transactions" className="space-y-6">
-              <Card className="bg-gray-800/50 backdrop-blur-sm border-gray-700">
-                <CardHeader>
-                  <CardTitle className="text-white font-poppins">All Transactions</CardTitle>
-                  <CardDescription className="text-gray-300">
-                    Complete transaction history and management
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {transactions.map((transaction) => (
-                      <div key={transaction.id} className="flex items-center justify-between p-4 bg-gray-700/30 rounded-lg">
-                        <div className="flex-1">
-                          <p className="text-white font-medium">{transaction.transactionNumber}</p>
-                          <p className="text-gray-400 text-sm">{transaction.customerName} • {transaction.deviceInfo}</p>
-                          <p className="text-gray-500 text-xs">Submitted: {new Date(transaction.submittedDate).toLocaleDateString()}</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-lemon font-bold">R{(transaction.offeredAmount || transaction.estimatedValue || 0).toLocaleString()}</p>
-                          <p className="text-gray-400 text-sm">{transaction.status}</p>
-                          {transaction.agentName && (
-                            <p className="text-gray-500 text-xs">Agent: {transaction.agentName}</p>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+            <TabsContent value="transactions">
+              <AdminTransactions transactions={transactions} />
             </TabsContent>
 
             <TabsContent value="profile">
