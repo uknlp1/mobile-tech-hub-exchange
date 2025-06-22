@@ -1,11 +1,9 @@
-
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Smartphone, Menu, X, ShoppingCart, DollarSign, Wrench, FileText, User, LogOut, Info, Mail } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
-
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -21,7 +19,6 @@ const Navigation = () => {
   // Hide navigation on dashboard pages
   const isDashboardPage = location.pathname === '/agent-dashboard' || location.pathname === '/admin';
   const isAdminOrAgentDashboard = location.pathname === '/agent-dashboard' || location.pathname === '/admin';
-
   useEffect(() => {
     // Check if user is logged in by checking localStorage
     const loggedInUser = localStorage.getItem('currentUser');
@@ -51,7 +48,6 @@ const Navigation = () => {
       setIsAdmin(false);
     }
   }, []);
-
   const handleLogout = () => {
     // Check if user is logged in by checking localStorage
     localStorage.removeItem('currentUser');
@@ -63,7 +59,6 @@ const Navigation = () => {
     setIsAdmin(false);
     navigate('/');
   };
-
   const navItems = [{
     name: "About",
     path: "/about",
@@ -100,16 +95,11 @@ const Navigation = () => {
   }
 
   // Filter out specific menu items for admin and agent dashboards
-  const filteredNavItems = isAdminOrAgentDashboard 
-    ? navItems.filter(item => item.name === "Account")
-    : navItems;
-
+  const filteredNavItems = isAdminOrAgentDashboard ? navItems.filter(item => item.name === "Account") : navItems;
   const isActive = (path: string) => location.pathname === path;
-  
   if (isDashboardPage) {
     return null;
   }
-
   return <header className="bg-black/90 backdrop-blur-sm shadow-lg border-b border-lemon/20 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 bg-stone-950">
@@ -134,19 +124,17 @@ const Navigation = () => {
           {/* Auth Buttons and Cart */}
           <div className="hidden md:flex items-center space-x-4">
             {/* Cart Icon - only show if not on admin/agent dashboard */}
-            {!isAdminOrAgentDashboard && (
-              <Link to="/cart" className="relative">
+            {!isAdminOrAgentDashboard && <Link to="/cart" className="relative">
                 <Button variant="ghost" className="p-2 text-slate-50 font-bold text-xl">
                   <ShoppingCart className="h-6 w-6" />
                   {getTotalItems() > 0 && <Badge className="absolute -top-2 -right-2 bg-lemon text-black text-xs min-w-[20px] h-5 flex items-center justify-center rounded-full">
                       {getTotalItems()}
                     </Badge>}
                 </Button>
-              </Link>
-            )}
+              </Link>}
 
             {!isLoggedIn && <Link to="/agent-login">
-                <Button variant="ghost" className="text-lg rounded-sm font-normal bg-green-700 hover:bg-green-600 text-slate-50">
+                <Button variant="ghost" className="text-lg rounded-sm font-normal bg-[#ffea00] text-slate-950">
                   Agent/Admin
                 </Button>
               </Link>}
@@ -184,12 +172,10 @@ const Navigation = () => {
           })}
 
               {/* Mobile Cart - only show if not on admin/agent dashboard */}
-              {!isAdminOrAgentDashboard && (
-                <Link to="/cart" className="flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 text-gray-300 hover:text-lemon hover:bg-lemon/10" onClick={() => setIsMenuOpen(false)}>
+              {!isAdminOrAgentDashboard && <Link to="/cart" className="flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 text-gray-300 hover:text-lemon hover:bg-lemon/10" onClick={() => setIsMenuOpen(false)}>
                   <ShoppingCart className="h-4 w-4" />
                   <span>Cart ({getTotalItems()})</span>
-                </Link>
-              )}
+                </Link>}
 
               <div className="flex flex-col space-y-2 pt-4 border-t border-gray-700">
                 {!isLoggedIn && <Link to="/agent-login" onClick={() => setIsMenuOpen(false)}>
@@ -220,5 +206,4 @@ const Navigation = () => {
       </div>
     </header>;
 };
-
 export default Navigation;
