@@ -42,6 +42,7 @@ export interface Device {
   model: string;
   condition: string;
   storage: string;
+  ram?: string;
   price: number;
   originalPrice: number;
   inStock: boolean;
