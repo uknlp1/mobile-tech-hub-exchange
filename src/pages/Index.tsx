@@ -314,10 +314,10 @@ const Index = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 rounded">
         <div className="max-w-4xl mx-auto text-center">
           <Card className="bg-gradient-to-r from-lemon/10 to-lemon/5 border-lemon/20 backdrop-blur-sm">
-            <CardContent className="p-12">
+            <CardContent className="p-12 bg-[ffea00] bg-[#ffea00]">
               <h2 className="text-3xl md:text-4xl font-bold mb-4 font-poppins text-slate-950">
                 Ready to Get Started?
               </h2>
@@ -326,7 +326,7 @@ const Index = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link to="/buy">
-                  <Button size="lg" className="bg-lemon hover:bg-lemon-dark text-black font-semibold">
+                  <Button size="lg" className="font-semibold text-slate-50 bg-black">
                     Browse Devices
                   </Button>
                 </Link>
