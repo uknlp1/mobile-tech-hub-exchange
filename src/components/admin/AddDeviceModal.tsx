@@ -19,6 +19,7 @@ const AddDeviceModal = ({ onAddDevice, onClose }: AddDeviceModalProps) => {
     model: "",
     condition: "",
     storage: "",
+    ram: "",
     price: "",
     originalPrice: "",
     images: [] as string[]
@@ -35,6 +36,11 @@ const AddDeviceModal = ({ onAddDevice, onClose }: AddDeviceModalProps) => {
     }
   };
 
+  const removeImage = (index: number) => {
+    const newImages = newDevice.images.filter((_, i) => i !== index);
+    setNewDevice({ ...newDevice, images: newImages });
+  };
+
   const handleAddDevice = () => {
     const deviceData = {
       ...newDevice,
@@ -43,12 +49,12 @@ const AddDeviceModal = ({ onAddDevice, onClose }: AddDeviceModalProps) => {
     };
     
     onAddDevice(deviceData);
-    setNewDevice({ type: "", brand: "", model: "", condition: "", storage: "", price: "", originalPrice: "", images: [] });
+    setNewDevice({ type: "", brand: "", model: "", condition: "", storage: "", ram: "", price: "", originalPrice: "", images: [] });
     onClose();
   };
 
   return (
-    <DialogContent className="bg-gray-800 border-gray-700 text-white max-w-2xl">
+    <DialogContent className="bg-gray-800 border-gray-700 text-white max-w-2xl max-h-[90vh] overflow-y-auto">
       <DialogHeader>
         <DialogTitle>Add New Device</DialogTitle>
         <DialogDescription className="text-gray-300">
@@ -66,6 +72,7 @@ const AddDeviceModal = ({ onAddDevice, onClose }: AddDeviceModalProps) => {
               <SelectContent>
                 <SelectItem value="phone">Phone</SelectItem>
                 <SelectItem value="laptop">Laptop</SelectItem>
+                <SelectItem value="tv">TV</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -90,7 +97,7 @@ const AddDeviceModal = ({ onAddDevice, onClose }: AddDeviceModalProps) => {
           <div>
             <Label className="text-gray-300">Storage</Label>
             <Input 
-              placeholder="e.g., 256GB" 
+              placeholder="e.g., 256GB or 55-inch" 
               value={newDevice.storage}
               onChange={(e) => setNewDevice({...newDevice, storage: e.target.value})}
               className="bg-gray-700 border-gray-600 text-white" 
@@ -98,6 +105,15 @@ const AddDeviceModal = ({ onAddDevice, onClose }: AddDeviceModalProps) => {
           </div>
         </div>
         <div className="grid grid-cols-2 gap-4">
+          <div>
+            <Label className="text-gray-300">RAM</Label>
+            <Input 
+              placeholder="e.g., 8GB (for laptops/phones)" 
+              value={newDevice.ram}
+              onChange={(e) => setNewDevice({...newDevice, ram: e.target.value})}
+              className="bg-gray-700 border-gray-600 text-white" 
+            />
+          </div>
           <div>
             <Label className="text-gray-300">Condition</Label>
             <Select value={newDevice.condition} onValueChange={(value) => setNewDevice({...newDevice, condition: value})}>
@@ -111,6 +127,8 @@ const AddDeviceModal = ({ onAddDevice, onClose }: AddDeviceModalProps) => {
               </SelectContent>
             </Select>
           </div>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
           <div>
             <Label className="text-gray-300">Price (ZAR)</Label>
             <Input 
@@ -120,15 +138,15 @@ const AddDeviceModal = ({ onAddDevice, onClose }: AddDeviceModalProps) => {
               className="bg-gray-700 border-gray-600 text-white" 
             />
           </div>
-        </div>
-        <div>
-          <Label className="text-gray-300">Original Price (ZAR)</Label>
-          <Input 
-            type="number" 
-            value={newDevice.originalPrice}
-            onChange={(e) => setNewDevice({...newDevice, originalPrice: e.target.value})}
-            className="bg-gray-700 border-gray-600 text-white" 
-          />
+          <div>
+            <Label className="text-gray-300">Original Price (ZAR)</Label>
+            <Input 
+              type="number" 
+              value={newDevice.originalPrice}
+              onChange={(e) => setNewDevice({...newDevice, originalPrice: e.target.value})}
+              className="bg-gray-700 border-gray-600 text-white" 
+            />
+          </div>
         </div>
         <div>
           <Label className="text-gray-300">Device Images (up to 3)</Label>
@@ -145,6 +163,12 @@ const AddDeviceModal = ({ onAddDevice, onClose }: AddDeviceModalProps) => {
                 {newDevice.images.map((image, index) => (
                   <div key={index} className="relative">
                     <img src={image} alt={`Device ${index + 1}`} className="w-full h-20 object-cover rounded" />
+                    <Button
+                      onClick={() => removeImage(index)}
+                      className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 p-0 text-xs"
+                    >
+                      ×
+                    </Button>
                   </div>
                 ))}
               </div>

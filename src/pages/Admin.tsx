@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -7,7 +6,7 @@ import Navigation from "@/components/Navigation";
 import AgentManagement from "@/components/admin/AgentManagement";
 import DeviceManagement from "@/components/admin/DeviceManagement";
 import ProfileManagement from "@/components/admin/ProfileManagement";
-import { loadTransactions, loadCustomers, loadAgents, loadDevices } from "@/utils/storage";
+import { loadTransactions, loadCustomers, loadAgents, loadDevices, saveDevices } from "@/utils/storage";
 
 const Admin = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -16,7 +15,7 @@ const Admin = () => {
   const transactions = loadTransactions();
   const customers = loadCustomers();
   const agents = loadAgents();
-  const devices = loadDevices();
+  const [devices, setDevices] = useState(loadDevices());
   
   const totalRevenue = transactions.reduce((sum, txn) => sum + (txn.offeredAmount || 0), 0);
   const pendingTransactions = transactions.filter(txn => 
@@ -41,8 +40,35 @@ const Admin = () => {
 
   // Handler functions for DeviceManagement
   const handleAddDevice = (deviceData: any) => {
-    console.log("Adding device:", deviceData);
-    // Implementation would be added here
+    const newDevice = {
+      ...deviceData,
+      id: Date.now().toString(),
+      name: `${deviceData.brand} ${deviceData.model}`,
+      inStock: true,
+      addedDate: new Date().toLocaleDateString()
+    };
+    const updatedDevices = [...devices, newDevice];
+    setDevices(updatedDevices);
+    saveDevices(updatedDevices);
+    console.log("Adding device:", newDevice);
+  };
+
+  const handleUpdateDevice = (deviceId: string, updates: any) => {
+    const updatedDevices = devices.map(device => 
+      device.id === deviceId 
+        ? { ...device, ...updates, name: `${updates.brand || device.brand} ${updates.model || device.model}` }
+        : device
+    );
+    setDevices(updatedDevices);
+    saveDevices(updatedDevices);
+    console.log("Updating device:", deviceId, updates);
+  };
+
+  const handleDeleteDevice = (deviceId: string) => {
+    const updatedDevices = devices.filter(device => device.id !== deviceId);
+    setDevices(updatedDevices);
+    saveDevices(updatedDevices);
+    console.log("Deleting device:", deviceId);
   };
 
   return (
@@ -176,6 +202,8 @@ const Admin = () => {
               <DeviceManagement 
                 devices={devices}
                 onAddDevice={handleAddDevice}
+                onUpdateDevice={handleUpdateDevice}
+                onDeleteDevice={handleDeleteDevice}
               />
             </TabsContent>
 
