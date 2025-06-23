@@ -21,8 +21,9 @@ const Navigation = () => {
   // Hide navigation on dashboard pages
   const isDashboardPage = location.pathname === '/agent-dashboard' || location.pathname === '/admin';
   const isAdminOrAgentDashboard = location.pathname === '/agent-dashboard' || location.pathname === '/admin';
+
+  // Check if user is logged in by checking localStorage
   useEffect(() => {
-    // Check if user is logged in by checking localStorage
     const loggedInUser = localStorage.getItem('currentUser');
     const currentAgent = localStorage.getItem('currentAgent');
     const adminStatus = localStorage.getItem('isAdmin');
@@ -50,6 +51,7 @@ const Navigation = () => {
       setIsAdmin(false);
     }
   }, []);
+
   const handleLogout = () => {
     // Check if user is logged in by checking localStorage
     localStorage.removeItem('currentUser');
@@ -61,6 +63,7 @@ const Navigation = () => {
     setIsAdmin(false);
     navigate('/');
   };
+
   const navItems = [{
     name: "About",
     path: "/about",
@@ -96,7 +99,7 @@ const Navigation = () => {
     });
   }
 
-  // Hide all nav items except Account for admin and agent dashboards
+  // Hide all nav items for admin and agent dashboards - show only logo and auth
   const filteredNavItems = isAdminOrAgentDashboard ? [] : navItems;
   
   const isActive = (path: string) => location.pathname === path;
@@ -116,15 +119,17 @@ const Navigation = () => {
             <span className="text-white font-poppins text-3xl font-bold">Quickbuy</span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-4">
-            {filteredNavItems.map(item => {
-            const Icon = item.icon;
-            return <Link key={item.name} to={item.path} className={`flex items-center space-x-1 px-3 py-2 rounded-lg transition-all duration-300 font-medium ${isActive(item.path) ? "bg-lemon text-black" : "text-gray-300 hover:text-lemon hover:bg-lemon/10"}`}>
-                  <span className="text-slate-50 text-lg">{item.name}</span>
-                </Link>;
-          })}
-          </nav>
+          {/* Desktop Navigation - Hidden on admin/agent dashboards */}
+          {!isAdminOrAgentDashboard && (
+            <nav className="hidden md:flex space-x-4">
+              {filteredNavItems.map(item => {
+                const Icon = item.icon;
+                return <Link key={item.name} to={item.path} className={`flex items-center space-x-1 px-3 py-2 rounded-lg transition-all duration-300 font-medium ${isActive(item.path) ? "bg-lemon text-black" : "text-gray-300 hover:text-lemon hover:bg-lemon/10"}`}>
+                    <span className="text-slate-50 text-lg">{item.name}</span>
+                  </Link>;
+              })}
+            </nav>
+          )}
 
           {/* Auth Buttons and Cart */}
           <div className="hidden md:flex items-center space-x-4">
@@ -156,7 +161,7 @@ const Navigation = () => {
               </div>
             )}
 
-            {/* Regular user auth buttons */}
+            {/* Regular user auth buttons - Show on all pages */}
             {!isLoggedIn && <Link to="/agent-login">
                 <Button variant="ghost" className="text-lg rounded-sm font-normal bg-[#ffea00] text-slate-950">
                   Agent/Admin
@@ -187,13 +192,14 @@ const Navigation = () => {
         {/* Mobile Navigation */}
         {isMenuOpen && <div className="md:hidden py-4 border-t border-gray-700">
             <div className="flex flex-col space-y-2">
-              {filteredNavItems.map(item => {
-            const Icon = item.icon;
-            return <Link key={item.name} to={item.path} className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${isActive(item.path) ? "bg-lemon text-black" : "text-gray-300 hover:text-lemon hover:bg-lemon/10"}`} onClick={() => setIsMenuOpen(false)}>
-                    <Icon className="h-4 w-4" />
-                    <span>{item.name}</span>
-                  </Link>;
-          })}
+              {/* Only show nav items if not on admin/agent dashboard */}
+              {!isAdminOrAgentDashboard && filteredNavItems.map(item => {
+                const Icon = item.icon;
+                return <Link key={item.name} to={item.path} className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${isActive(item.path) ? "bg-lemon text-black" : "text-gray-300 hover:text-lemon hover:bg-lemon/10"}`} onClick={() => setIsMenuOpen(false)}>
+                      <Icon className="h-4 w-4" />
+                      <span>{item.name}</span>
+                    </Link>;
+              })}
 
               {/* Mobile Cart - only show if not on admin/agent dashboard */}
               {!isAdminOrAgentDashboard && <Link to="/cart" className="flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 text-gray-300 hover:text-lemon hover:bg-lemon/10" onClick={() => setIsMenuOpen(false)}>
@@ -204,13 +210,13 @@ const Navigation = () => {
               <div className="flex flex-col space-y-2 pt-4 border-t border-gray-700">
                 {!isLoggedIn && <Link to="/agent-login" onClick={() => setIsMenuOpen(false)}>
                     <Button variant="ghost" className="w-full text-gray-300 hover:text-lemon hover:bg-lemon/10">
-                      Agent Login
+                      Agent/Admin
                     </Button>
                   </Link>}
                 
                 {!isLoggedIn ? <Link to="/auth" onClick={() => setIsMenuOpen(false)}>
                     <Button variant="outline" className="w-full border-lemon text-lemon hover:bg-lemon hover:text-black">
-                      Login
+                      Login/SignUp
                     </Button>
                   </Link> : <div className="space-y-2">
                     <p className="text-gray-300 text-sm px-3">
