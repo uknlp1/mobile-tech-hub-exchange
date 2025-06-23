@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -99,8 +100,11 @@ const Navigation = () => {
     });
   }
 
-  // Hide all nav items for admin and agent dashboards - show only logo and auth
-  const filteredNavItems = isAdminOrAgentDashboard ? [] : navItems;
+  // Filter out specific items for admin and agent dashboards
+  const hiddenItems = ['About', 'Buy', 'Sell', 'Repairs', 'Track', 'Contact'];
+  const filteredNavItems = isAdminOrAgentDashboard 
+    ? navItems.filter(item => !hiddenItems.includes(item.name))
+    : navItems;
   
   const isActive = (path: string) => location.pathname === path;
   
@@ -119,21 +123,19 @@ const Navigation = () => {
             <span className="text-white font-poppins text-3xl font-bold">Quickbuy</span>
           </Link>
 
-          {/* Desktop Navigation - Hidden on admin/agent dashboards */}
-          {!isAdminOrAgentDashboard && (
-            <nav className="hidden md:flex space-x-4">
-              {filteredNavItems.map(item => {
-                const Icon = item.icon;
-                return <Link key={item.name} to={item.path} className={`flex items-center space-x-1 px-3 py-2 rounded-lg transition-all duration-300 font-medium ${isActive(item.path) ? "bg-lemon text-black" : "text-gray-300 hover:text-lemon hover:bg-lemon/10"}`}>
-                    <span className="text-slate-50 text-lg">{item.name}</span>
-                  </Link>;
-              })}
-            </nav>
-          )}
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex space-x-4">
+            {filteredNavItems.map(item => {
+              const Icon = item.icon;
+              return <Link key={item.name} to={item.path} className={`flex items-center space-x-1 px-3 py-2 rounded-lg transition-all duration-300 font-medium ${isActive(item.path) ? "bg-lemon text-black" : "text-gray-300 hover:text-lemon hover:bg-lemon/10"}`}>
+                  <span className="text-slate-50 text-lg">{item.name}</span>
+                </Link>;
+            })}
+          </nav>
 
           {/* Auth Buttons and Cart */}
           <div className="hidden md:flex items-center space-x-4">
-            {/* Cart Icon - only show if not on admin/agent dashboard */}
+            {/* Cart Icon - hide on admin/agent dashboard */}
             {!isAdminOrAgentDashboard && <Link to="/cart" className="relative">
                 <Button variant="ghost" className="p-2 text-slate-50 font-bold text-xl">
                   <ShoppingCart className="h-6 w-6" />
@@ -192,8 +194,8 @@ const Navigation = () => {
         {/* Mobile Navigation */}
         {isMenuOpen && <div className="md:hidden py-4 border-t border-gray-700">
             <div className="flex flex-col space-y-2">
-              {/* Only show nav items if not on admin/agent dashboard */}
-              {!isAdminOrAgentDashboard && filteredNavItems.map(item => {
+              {/* Show filtered nav items */}
+              {filteredNavItems.map(item => {
                 const Icon = item.icon;
                 return <Link key={item.name} to={item.path} className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 ${isActive(item.path) ? "bg-lemon text-black" : "text-gray-300 hover:text-lemon hover:bg-lemon/10"}`} onClick={() => setIsMenuOpen(false)}>
                       <Icon className="h-4 w-4" />
@@ -201,7 +203,7 @@ const Navigation = () => {
                     </Link>;
               })}
 
-              {/* Mobile Cart - only show if not on admin/agent dashboard */}
+              {/* Mobile Cart - hide on admin/agent dashboard */}
               {!isAdminOrAgentDashboard && <Link to="/cart" className="flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 text-gray-300 hover:text-lemon hover:bg-lemon/10" onClick={() => setIsMenuOpen(false)}>
                   <ShoppingCart className="h-4 w-4" />
                   <span>Cart ({getTotalItems()})</span>
