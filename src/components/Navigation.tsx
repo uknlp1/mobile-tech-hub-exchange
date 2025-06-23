@@ -19,8 +19,7 @@ const Navigation = () => {
     getTotalItems
   } = useCart();
 
-  // Hide navigation on dashboard pages
-  const isDashboardPage = location.pathname === '/agent-dashboard' || location.pathname === '/admin';
+  // Check if on admin or agent dashboard pages
   const isAdminOrAgentDashboard = location.pathname === '/agent-dashboard' || location.pathname === '/admin';
 
   // Check if user is logged in by checking localStorage
@@ -107,10 +106,6 @@ const Navigation = () => {
     : navItems;
   
   const isActive = (path: string) => location.pathname === path;
-  
-  if (isDashboardPage) {
-    return null;
-  }
 
   return <header className="bg-black/90 backdrop-blur-sm shadow-lg border-b border-lemon/20 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
