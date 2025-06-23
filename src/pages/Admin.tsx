@@ -1,13 +1,14 @@
 
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Users, Package, BarChart3, Settings, DollarSign } from "lucide-react";
+import { Users, Package, BarChart3, Settings, DollarSign, ShoppingBag } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import AgentManagement from "@/components/admin/AgentManagement";
 import DeviceManagement from "@/components/admin/DeviceManagement";
 import ProfileManagement from "@/components/admin/ProfileManagement";
 import AdminOverview from "@/components/admin/AdminOverview";
 import AdminTransactions from "@/components/admin/AdminTransactions";
+import OrderManagement from "@/components/admin/OrderManagement";
 import { loadTransactions, loadCustomers, loadAgents, loadDevices, saveDevices } from "@/utils/storage";
 
 const Admin = () => {
@@ -87,13 +88,20 @@ const Admin = () => {
           </div>
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-            <TabsList className="grid w-full grid-cols-5 bg-gray-800/50 backdrop-blur-sm border-gray-700">
+            <TabsList className="grid w-full grid-cols-6 bg-gray-800/50 backdrop-blur-sm border-gray-700">
               <TabsTrigger 
                 value="overview" 
                 className="data-[state=active]:bg-lemon data-[state=active]:text-black text-gray-300"
               >
                 <BarChart3 className="h-4 w-4 mr-2" />
                 Overview
+              </TabsTrigger>
+              <TabsTrigger 
+                value="orders" 
+                className="data-[state=active]:bg-lemon data-[state=active]:text-black text-gray-300"
+              >
+                <ShoppingBag className="h-4 w-4 mr-2" />
+                Orders
               </TabsTrigger>
               <TabsTrigger 
                 value="agents" 
@@ -132,6 +140,10 @@ const Admin = () => {
                 agents={agents}
                 totalRevenue={totalRevenue}
               />
+            </TabsContent>
+
+            <TabsContent value="orders">
+              <OrderManagement />
             </TabsContent>
 
             <TabsContent value="agents">

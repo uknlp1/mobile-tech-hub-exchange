@@ -2,8 +2,10 @@ import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Smartphone, Menu, X, ShoppingCart, DollarSign, Wrench, FileText, User, LogOut, Info, Mail } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
+
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -85,7 +87,7 @@ const Navigation = () => {
     icon: Mail
   }];
 
-  // Only show Account if user is logged in
+  // Only show Account if user is logged in and not admin/agent
   if (isLoggedIn && !isAgent && !isAdmin) {
     navItems.push({
       name: "Account",
@@ -94,16 +96,19 @@ const Navigation = () => {
     });
   }
 
-  // Filter out specific menu items for admin and agent dashboards
-  const filteredNavItems = isAdminOrAgentDashboard ? navItems.filter(item => item.name === "Account") : navItems;
+  // Hide all nav items except Account for admin and agent dashboards
+  const filteredNavItems = isAdminOrAgentDashboard ? [] : navItems;
+  
   const isActive = (path: string) => location.pathname === path;
+  
   if (isDashboardPage) {
     return null;
   }
+
   return <header className="bg-black/90 backdrop-blur-sm shadow-lg border-b border-lemon/20 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 bg-stone-950">
-          {/* Logo */}
+          {/* Logo - Always visible */}
           <Link to="/" className="flex items-center space-x-3">
             <div className="p-2 bg-lemon rounded-lg">
               <Smartphone className="h-6 w-6 text-black" />
@@ -133,6 +138,25 @@ const Navigation = () => {
                 </Button>
               </Link>}
 
+            {/* User Profile Section for Admin/Agent - Show always when logged in */}
+            {isLoggedIn && (isAgent || isAdmin) && (
+              <div className="flex items-center space-x-3">
+                <Avatar className="h-8 w-8">
+                  <AvatarFallback className="bg-lemon text-black font-medium">
+                    {isAdmin ? "A" : "AG"}
+                  </AvatarFallback>
+                </Avatar>
+                <span className="text-gray-300 text-lg font-medium">
+                  {isAgent ? "Agent: " : "Admin: "}{userEmail}
+                </span>
+                <Button onClick={handleLogout} variant="outline" className="border-lemon hover:bg-lemon text-zinc-950">
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Logout
+                </Button>
+              </div>
+            )}
+
+            {/* Regular user auth buttons */}
             {!isLoggedIn && <Link to="/agent-login">
                 <Button variant="ghost" className="text-lg rounded-sm font-normal bg-[#ffea00] text-slate-950">
                   Agent/Admin
@@ -143,9 +167,9 @@ const Navigation = () => {
                 <Button variant="outline" className="border-lemon hover:bg-lemon text-zinc-950 text-lg">
                   Login/SignUp
                 </Button>
-              </Link> : <div className="flex items-center space-x-4">
+              </Link> : !isAgent && !isAdmin && <div className="flex items-center space-x-4">
                 <span className="text-gray-300 text-lg">
-                  {isAgent ? "Agent: " : isAdmin ? "Admin: " : ""}{userEmail}
+                  {userEmail}
                 </span>
                 <Button onClick={handleLogout} variant="outline" className="border-lemon hover:bg-lemon text-zinc-950">
                   <LogOut className="h-4 w-4 mr-2" />
@@ -206,4 +230,5 @@ const Navigation = () => {
       </div>
     </header>;
 };
+
 export default Navigation;
